@@ -171,33 +171,18 @@
   line-height:1;
 }
 
-/* #link 内動画 */
-#page_top #link .img{
-  position:relative;
-  aspect-ratio:768/508;
-  background:#ddd;
-}
-#page_top #link .img video{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-@media screen and (max-width:767px){
-  #page_top #fv .ttlArea .catch h1.nagomi-catch span{
-    font-size:2.8rem;
-    letter-spacing:.12em;
+/* #link 内動画（PC） */
+@media screen and (min-width:768px){
+  #page_top #link .img{
+    position:relative;
+    aspect-ratio:768/508;
+    background:#ddd;
   }
-  #page_top #fv .ttlArea .catch .sub{
-    margin-top:1.2rem;
-    font-size:1.2rem;
-  }
-  #page_top #fv .video.js_fv_videos{
-    aspect-ratio:auto;
-    max-width:100%;
+  #page_top #link .img video{
+    display:block;
     width:100%;
     height:100%;
+    object-fit:cover;
   }
 }
 
@@ -794,107 +779,166 @@
   display:none!important;
 }
 
-/* SP */
+/* ========== スマホ専用レイアウト ========== */
 @media screen and (max-width:767px){
-  #page_top #fv .badge.m_box_badge .hd.nagomi-badge-hd{
-    font-size:1.15rem;
-    top:-8%;
-    letter-spacing:.22em;
-  }
-  #page_top #fv .badge #countdown.nagomi-count.-remain{
-    padding-top:.4rem;
-    gap:.15rem;
-  }
-  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-label{font-size:1.4rem}
-  #page_top #fv .badge #countdown.nagomi-count.-remain .digit{font-size:4.8rem}
-  #page_top #fv .badge #countdown.nagomi-count.-remain .unit{font-size:1.5rem}
-  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .t{
-    min-width:2.6rem;
-    font-size:1.7rem;
-  }
-  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .t small{font-size:.85rem}
-  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .colon{
-    font-size:1.5rem;
-    margin-top:.1rem;
-  }
-
-  #page_top #intro .row .imgArea img{
-    width:27rem;
-  }
-  #page_top #intro .row .txtArea h2{
-    font-size:2rem;
-    letter-spacing:.04em;
-    line-height:1.7;
-    word-break:break-word;
-  }
-
-  /* life video needs explicit height (base is opacity:0 spacer) */
-  #page_top #life .ttlArea .visual{
-    width:100%;
-    max-width:100%;
-    left:0 !important;
-    margin-right:0 !important;
-  }
-  #page_top #life .ttlArea .visual .base{
-    min-height:56vh !important;
-    height:56vh !important;
-    max-height:none !important;
-  }
-  #page_top #life .ttlArea .visual .base img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-  }
-  #page_top #life .ttlArea .visual .media{
-    position:absolute !important;
-    inset:0;
-  }
-
-  #page_top #link h3.nagomi-link-hd span,
-  #page_top #life .ttlArea h2.catch span.nagomi-sec-catch{
-    white-space:normal !important;
-  }
-
-  #page_top #message .btn a img{
-    max-width:100%;
-    width:auto;
-  }
-
-  #page_top #campaign .pay-row .checks{
-    margin-left:0;
-    width:100%;
-  }
-  #page_top #campaign .pack-grid{grid-template-columns:1fr}
-
-  #name_modal .inner{padding:2.4rem 1.6rem}
-  #name_modal .name-grid{grid-template-columns:1fr}
-}
-
-/* Mobile-first: phones + phone landscape (iPhone ~430–956px) */
-@media screen and (max-width:1023px){
   html,body{
     overflow-x:hidden !important;
-    max-width:100%;
+    max-width:100vw;
   }
   body{
-    min-width:100% !important;
+    min-width:0 !important;
+    width:100% !important;
   }
   .m_box_fixed{
     width:100% !important;
-    max-width:100%;
+    max-width:100% !important;
     padding-left:2rem;
     padding-right:2rem;
     box-sizing:border-box;
   }
 
-  #page_top #fv .wrapper{
-    width:100% !important;
+  /* ---- FV: 全画面ヒーロー ---- */
+  #page_top #fv{
+    position:relative;
+    min-height:100svh;
+    height:auto !important;
+    overflow:hidden;
   }
-  #page_top #fv .video.js_fv_videos{
-    max-width:100% !important;
+  #page_top #fv .wrapper{
+    position:relative;
+    display:flex;
+    flex-direction:column;
     width:100% !important;
+    min-height:100svh;
+    height:auto !important;
+    margin:0;
+    z-index:1;
+  }
+  #page_top #fv .video,
+  #page_top #fv .video.js_fv_videos{
+    position:absolute !important;
+    inset:0;
+    z-index:0;
+    display:block !important;
+    width:100% !important;
+    max-width:none !important;
+    height:100% !important;
+    aspect-ratio:auto !important;
+    filter:none !important;
+    opacity:1 !important;
+  }
+  #page_top #fv .video.js_fv_videos:after{
+    content:'';
+    position:absolute;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    background:linear-gradient(180deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,.18) 45%,rgba(0,0,0,.5) 100%);
+  }
+  #page_top #fv .video.js_fv_videos video,
+  #page_top #fv .video img,
+  #page_top #fv .video video{
+    position:absolute;
+    inset:0;
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover;
+  }
+  #page_top #fv .ttlArea{
+    position:relative !important;
+    top:auto !important;
+    left:0 !important;
+    z-index:2;
+    display:block !important;
+    height:auto !important;
+    padding:max(5.6rem, env(safe-area-inset-top)) 2rem 2rem !important;
+    text-align:left;
+  }
+  #page_top #fv .ttlArea .catch h1,
+  #page_top #fv .ttlArea .catch h1.nagomi-catch{
+    width:auto !important;
+    max-width:100%;
+  }
+  #page_top #fv .ttlArea .catch h1.nagomi-catch span{
+    font-size:clamp(2.4rem,7.2vw,3.2rem);
+    letter-spacing:.1em;
+    color:#fff !important;
+    text-shadow:0 2px 12px rgba(0,0,0,.45);
+  }
+  #page_top #fv .ttlArea .catch .sub{
+    position:static !important;
+    margin-top:1.2rem;
+    left:auto !important;
+    bottom:auto !important;
+    font-size:1.2rem;
+    color:rgba(255,255,255,.92);
+    text-shadow:0 1px 8px rgba(0,0,0,.4);
+  }
+  #page_top #fv .badge.m_box_badge{
+    position:absolute !important;
+    z-index:4 !important;
+    right:1.2rem;
+    bottom:8.8rem;
+    width:15.2rem;
+    height:15.6rem;
+  }
+  #page_top #fv .badge.m_box_badge .hd.nagomi-badge-hd{
+    font-size:1.05rem;
+    top:-6%;
+    letter-spacing:.18em;
+  }
+  #page_top #fv .badge #countdown.nagomi-count.-remain{
+    padding-top:.2rem;
+    gap:.1rem;
+  }
+  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-label{font-size:1.2rem}
+  #page_top #fv .badge #countdown.nagomi-count.-remain .digit{font-size:4rem}
+  #page_top #fv .badge #countdown.nagomi-count.-remain .unit{font-size:1.3rem}
+  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .t{
+    min-width:2.2rem;
+    font-size:1.4rem;
+  }
+  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .t small{font-size:.75rem}
+  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .colon{
+    font-size:1.3rem;
+    margin-top:.1rem;
+  }
+  #page_top #fv .linkArea{
+    position:relative !important;
+    top:auto !important;
+    left:0 !important;
+    z-index:3 !important;
+    margin-top:auto;
+    width:100% !important;
+    height:auto !important;
+    border:none !important;
+    border-top:1px solid rgba(112,112,112,.55) !important;
+    background:rgba(245,245,245,.94) !important;
+    transform:none !important;
+    opacity:1 !important;
+    display:flex;
+    overflow:hidden;
+  }
+  #page_top #fv .linkArea ul{
+    width:max-content !important;
+    padding:.7rem 0;
+  }
+  #page_top #fv .linkArea ul li a{
+    align-items:center;
+    gap:.2rem;
+    padding:0 1.2rem;
+  }
+  #page_top #fv .linkArea ul li a img{
+    width:3.6rem !important;
+    height:auto;
+  }
+  #page_top #fv .linkArea ul li a span{
+    margin:0 .4rem;
+    font-size:1.2rem;
+    white-space:nowrap;
   }
 
+  /* ---- Intro ---- */
   #page_top #intro .row{
     display:block !important;
     padding:0 !important;
@@ -903,20 +947,154 @@
     width:min(27rem,100%) !important;
     height:auto !important;
   }
+  #page_top #intro .row .txtArea h2{
+    font-size:2rem;
+    letter-spacing:.04em;
+    line-height:1.7;
+    word-break:break-word;
+  }
 
+  /* ---- #link: 縦積みフル幅カード ---- */
   #page_top #link{
     display:block !important;
     padding-bottom:0 !important;
   }
   #page_top #link > div{
-    padding-top:0 !important;
+    padding:0 !important;
   }
   #page_top #link > div:before{display:none !important}
   #page_top #link a{
+    display:block !important;
     width:100% !important;
-    margin:0 auto;
+    max-width:100% !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:2.4rem 2rem 2.8rem !important;
+    box-sizing:border-box;
+  }
+  #page_top #link h3,
+  #page_top #link h3.nagomi-link-hd{
+    position:relative !important;
+    top:auto !important;
+    left:auto !important;
+    display:flex !important;
+    width:auto !important;
+    max-width:100% !important;
+    height:auto !important;
+    min-height:4.8rem !important;
+    margin:0 0 1.2rem !important;
+    padding:1rem 1.4rem !important;
+  }
+  #page_top #link h3.nagomi-link-hd span{
+    white-space:normal !important;
+    font-size:1.8rem !important;
+    letter-spacing:.06em !important;
+  }
+  #page_top #link .type{
+    position:static !important;
+    margin:0 0 1.4rem !important;
+    font-size:1.4rem !important;
+  }
+  #page_top #link .img{
+    position:relative !important;
+    top:auto !important;
+    right:auto !important;
+    left:auto !important;
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 !important;
+    aspect-ratio:16 / 10;
+    overflow:hidden;
+    background:#ddd;
+  }
+  #page_top #link .img video,
+  #page_top #link .img img{
+    display:block;
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover;
+  }
+  #page_top #link .lead{
+    display:block !important;
+    margin-top:1.4rem;
+    font-size:1.35rem;
+    line-height:1.7;
   }
 
+  /* ---- life / food / story: ビジュアル全幅 ---- */
+  #page_top #food,
+  #page_top #life,
+  #page_top #story{
+    overflow-x:hidden;
+  }
+  #page_top #food .ttlArea .visual,
+  #page_top #life .ttlArea .visual,
+  #page_top #story .ttlArea .visual{
+    display:block !important;
+    position:relative !important;
+    left:0 !important;
+    right:0 !important;
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 !important;
+  }
+  #page_top #food .ttlArea .visual .base,
+  #page_top #life .ttlArea .visual .base,
+  #page_top #story .ttlArea .visual .base{
+    display:block !important;
+    width:100% !important;
+    min-height:56vh !important;
+    height:56vh !important;
+    max-height:none !important;
+    opacity:0 !important;
+  }
+  #page_top #food .ttlArea .visual .base img,
+  #page_top #life .ttlArea .visual .base img,
+  #page_top #story .ttlArea .visual .base img{
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover;
+  }
+  #page_top #food .ttlArea .visual .swiperWrap,
+  #page_top #life .ttlArea .visual .swiperWrap,
+  #page_top #story .ttlArea .visual .swiperWrap,
+  #page_top #food .ttlArea .visual .swiperWrap .swiper,
+  #page_top #life .ttlArea .visual .swiperWrap .swiper,
+  #page_top #story .ttlArea .visual .swiperWrap .swiper{
+    position:absolute !important;
+    inset:0;
+    width:100% !important;
+    height:100% !important;
+  }
+  #page_top #food .ttlArea .visual .swiper-slide img,
+  #page_top #life .ttlArea .visual .swiper-slide img,
+  #page_top #story .ttlArea .visual .swiper-slide img{
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover;
+  }
+  #page_top #life .ttlArea .visual .media{
+    position:absolute !important;
+    inset:0;
+    width:100% !important;
+    height:100% !important;
+  }
+  #page_top #life .ttlArea .visual .media video{
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover;
+  }
+  #page_top #food .ttlArea h2.catch span,
+  #page_top #life .ttlArea h2.catch span,
+  #page_top #story .ttlArea h2.catch span,
+  #page_top #food .ttlArea h2.catch span.nagomi-sec-catch,
+  #page_top #life .ttlArea h2.catch span.nagomi-sec-catch,
+  #page_top #story .ttlArea h2.catch span.nagomi-sec-catch{
+    width:auto !important;
+    max-width:100% !important;
+    white-space:normal !important;
+  }
   #page_top #food .contentsArea .wrap,
   #page_top #life .contentsArea .wrap,
   #page_top #story .contentsArea .wrap{
@@ -928,21 +1106,35 @@
   #page_top #story .contentsArea .imgGroup{
     position:static !important;
     width:100% !important;
+    max-width:100% !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
   }
-
-  #page_top #life .ttlArea .visual .base{
-    min-height:56vh !important;
-    height:56vh !important;
-  }
-  #page_top #life .ttlArea .visual .media{
-    position:absolute !important;
-    inset:0;
-  }
-
-  #page_top #yoppie .wrap{
+  #page_top #life .contentsArea .imgGroup .img01 img,
+  #page_top #life .contentsArea .imgGroup .img03 img,
+  #page_top #life .contentsArea .imgGroup p,
+  #page_top #food .contentsArea .imgGroup p,
+  #page_top #story .contentsArea .imgGroup p,
+  #page_top #food .contentsArea .imgGroup .img02,
+  #page_top #food .contentsArea .imgGroup .img03,
+  #page_top #story .contentsArea .imgGroup .img01,
+  #page_top #story .contentsArea .imgGroup .img02{
+    position:static !important;
     width:100% !important;
-    max-width:100%;
+    max-width:100% !important;
+    right:auto !important;
+    left:auto !important;
   }
+  #page_top #life .contentsArea .imgGroup .img02 video,
+  #page_top #life .contentsArea .imgGroup img,
+  #page_top #food .contentsArea .imgGroup img,
+  #page_top #story .contentsArea .imgGroup img{
+    width:100% !important;
+    height:auto !important;
+    display:block;
+  }
+
+  #page_top #yoppie .wrap,
   #page_top #campaign .wrap{
     width:100% !important;
     max-width:100%;
@@ -952,26 +1144,54 @@
     max-width:100%;
     box-sizing:border-box;
   }
+  #page_top #message .btn a img{
+    max-width:100%;
+    width:auto;
+  }
   #page_top #program .nagomi-schedule,
   #page_top #program .nagomi-schedule img{
     max-width:100% !important;
+    width:100% !important;
+    height:auto !important;
   }
+  #page_top #campaign .pay-row .checks{
+    margin-left:0;
+    width:100%;
+  }
+  #page_top #campaign .pack-grid{grid-template-columns:1fr}
 
-  #page_top #link h3.nagomi-link-hd{
-    width:auto !important;
-    max-width:70%;
-    min-height:auto !important;
+  #name_modal .inner{padding:2.4rem 1.6rem}
+  #name_modal .name-grid{grid-template-columns:1fr}
+}
+
+/* タブレット〜スマホ横向きでもデスクトップ幅を出さない */
+@media screen and (min-width:768px) and (max-width:1023px){
+  html,body{
+    overflow-x:hidden !important;
+    max-width:100%;
   }
-  #page_top #link h3.nagomi-link-hd span{
-    white-space:normal !important;
-    font-size:1.8rem !important;
-    letter-spacing:.06em !important;
+  body{
+    min-width:0 !important;
   }
-  #page_top #life .ttlArea h2.catch span.nagomi-sec-catch,
-  #page_top #food .ttlArea h2.catch span.nagomi-sec-catch,
-  #page_top #story .ttlArea h2.catch span.nagomi-sec-catch{
-    width:auto !important;
-    max-width:88vw;
-    white-space:normal !important;
+  .m_box_fixed{
+    width:100% !important;
+    max-width:100%;
+    padding-left:2.4rem;
+    padding-right:2.4rem;
+    box-sizing:border-box;
+  }
+  #page_top #fv .wrapper{width:100% !important}
+  #page_top #link{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+  }
+  #page_top #link a{width:100% !important;max-width:42rem}
+  #page_top #food .ttlArea .visual,
+  #page_top #life .ttlArea .visual,
+  #page_top #story .ttlArea .visual{
+    display:block !important;
+    width:100% !important;
+    left:0 !important;
+    margin:0 !important;
   }
 }
