@@ -33,10 +33,11 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=sp5">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=budget3">
 
   <script src="./asset/js/vender.js"></script>
-  <script defer src="./asset/js/app.js?v=sp5"></script>
+  <script src="./asset/js/nagomi-budget.js?v=budget3"></script>
+  <script defer src="./asset/js/app.js?v=budget3"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
@@ -625,122 +626,55 @@
               </h2>
 
               <p class="lead">
-                共同プール（10口×2万円）と、運転手免除の車代をわけてチェック。
+                11人×20,000円を共同財布へ。支出は負担グループごとにきちんと分けて精算。
               </p>
+              <p class="nagomi-special-note">スペシャルメンバー：はなちゃん🐕（費用負担なし）</p>
             </div>
 
             <div class="presentArea js_anim_scroll -fadein">
               <div class="present01">
-                <img loading="lazy" src="./asset/img/nagomi/cottage.jpg" alt="共同プール" width="510" height="330">
-                <p class="name">共同プール 20万<br><small>10口 × 2万円</small></p>
+                <img loading="lazy" src="./asset/img/nagomi/cottage.jpg" alt="回収予定" width="510" height="330">
+                <p class="name">回収予定 22万<br><small>11人 × 20,000円</small></p>
               </div>
 
               <div class="present02">
-                <img loading="lazy" src="./asset/img/nagomi/bbq.jpg" alt="宿泊費" width="510" height="330">
-                <p class="name">宿泊費 3棟 11.2万<br><small>111,980円（残枠 88,020円）</small></p>
+                <img loading="lazy" src="./asset/img/nagomi/bbq.jpg" alt="初期支出" width="510" height="330">
+                <p class="name">初期支出 144,480<br><small>コテージ・ペット・車代</small></p>
               </div>
 
               <div class="present03">
                 <img loading="lazy" src="./asset/img/nagomi/drive.jpg" alt="車代" width="510" height="330">
-                <p class="name">車代あつめ 32,900<br><small>同乗者7人 × 4,700円</small></p>
+                <p class="name">車代実費 32,500<br><small>負担者8人へ自動配分</small></p>
               </div>
             </div>
 
-            <div class="infoArea js_anim_scroll -fadein">
-              <dl class="entry">
-                <dt>2万円の入金</dt>
-                <dd><em id="cash_count">0</em> / 10
-                  <div class="nagomi-bar"><div class="nagomi-bar-fill" id="cash_bar" style="width:0%"></div></div>
-                </dd>
-              </dl>
-
-              <div class="pay-list" id="pay_list">
-                <div class="pay-row" data-name="和みママ">
-                  <span class="av" style="background:#c96f4a">マ</span>
-                  <span class="name">和みママ</span>
-                  <div class="checks">
-                    <label class="pay-check"><input type="checkbox" class="js_pay_cash" data-name="和みママ"> 2万円</label>
-                    <label class="pay-check"><input type="checkbox" class="js_pay_car" data-name="和みママ"> 車代4,700</label>
-                  </div>
-                </div>
-                <div class="pay-row" data-name="けんさん">
-                  <span class="av" style="background:#5a7d54">けん</span>
-                  <span class="name">けんさん</span>
-                  <div class="checks">
-                    <label class="pay-check"><input type="checkbox" class="js_pay_cash" data-name="けんさん"> 2万円</label>
-                    <span class="pay-exempt">🚗免除</span>
-                  </div>
-                </div>
-                <div class="pay-row" data-name="みきさん">
-                  <span class="av" style="background:#c9536f">み</span>
-                  <span class="name">みきさん</span>
-                  <div class="checks">
-                    <label class="pay-check"><input type="checkbox" class="js_pay_cash" data-name="みきさん"> 2万円</label>
-                    <label class="pay-check"><input type="checkbox" class="js_pay_car" data-name="みきさん"> 車代4,700</label>
-                  </div>
-                </div>
-                <div class="pay-row" data-name="キムニー">
-                  <span class="av" style="background:#1b6e8c">キ</span>
-                  <span class="name">キムニー</span>
-                  <div class="checks">
-                    <label class="pay-check"><input type="checkbox" class="js_pay_cash" data-name="キムニー"> 2万円</label>
-                    <label class="pay-check"><input type="checkbox" class="js_pay_car" data-name="キムニー"> 車代4,700</label>
-                  </div>
-                </div>
-                <div class="pay-row" data-name="ザッキィー">
-                  <span class="av" style="background:#7d9b4e">ザ</span>
-                  <span class="name">ザッキィー</span>
-                  <div class="checks">
-                    <label class="pay-check"><input type="checkbox" class="js_pay_cash" data-name="ザッキィー"> 2万円</label>
-                    <span class="pay-exempt">🚗免除</span>
-                  </div>
-                </div>
-                <div class="pay-row" data-name="アサちゃん">
-                  <span class="av" style="background:#b0568f">ア</span>
-                  <span class="name">アサちゃん</span>
-                  <div class="checks">
-                    <label class="pay-check"><input type="checkbox" class="js_pay_cash" data-name="アサちゃん"> 2万円</label>
-                    <label class="pay-check"><input type="checkbox" class="js_pay_car" data-name="アサちゃん"> 車代4,700</label>
-                  </div>
-                </div>
-                <div class="pay-row" data-name="すみちゃん">
-                  <span class="av" style="background:#d9a441">す</span>
-                  <span class="name">すみちゃん</span>
-                  <div class="checks">
-                    <label class="pay-check"><input type="checkbox" class="js_pay_cash" data-name="すみちゃん"> 2万円</label>
-                    <label class="pay-check"><input type="checkbox" class="js_pay_car" data-name="すみちゃん"> 車代4,700</label>
-                  </div>
-                </div>
-                <div class="pay-row" data-name="けいちゃん">
-                  <span class="av" style="background:#7a5bb0">け</span>
-                  <span class="name">けいちゃん</span>
-                  <div class="checks">
-                    <label class="pay-check"><input type="checkbox" class="js_pay_cash" data-name="けいちゃん"> 2万円</label>
-                    <label class="pay-check"><input type="checkbox" class="js_pay_car" data-name="けいちゃん"> 車代4,700</label>
-                  </div>
-                </div>
-                <div class="pay-row" data-name="けいくん">
-                  <span class="av" style="background:#2277a8">K</span>
-                  <span class="name">けいくん</span>
-                  <div class="checks">
-                    <label class="pay-check"><input type="checkbox" class="js_pay_cash" data-name="けいくん"> 2万円</label>
-                    <label class="pay-check"><input type="checkbox" class="js_pay_car" data-name="けいくん"> 車代4,700</label>
-                  </div>
-                </div>
-                <div class="pay-row" data-name="ゆうじろうくん">
-                  <span class="av" style="background:#c9536f">ゆ</span>
-                  <span class="name">ゆうじろうくん</span>
-                  <div class="checks">
-                    <label class="pay-check"><input type="checkbox" class="js_pay_cash" data-name="ゆうじろうくん"> 2万円</label>
-                    <span class="pay-exempt">🚗免除</span>
-                  </div>
-                </div>
+            <div class="infoArea js_anim_scroll -fadein nagomi-budget-panel">
+              <div class="nagomi-tabs" role="tablist" aria-label="共同財布メニュー">
+                <button type="button" class="nagomi-tab is-active" data-tab="wallet" role="tab" aria-selected="true">共同財布</button>
+                <button type="button" class="nagomi-tab" data-tab="deposits" role="tab" aria-selected="false">入金状況</button>
+                <button type="button" class="nagomi-tab" data-tab="expenses" role="tab" aria-selected="false">支出履歴</button>
+                <button type="button" class="nagomi-tab" data-tab="settlement" role="tab" aria-selected="false">個人別精算</button>
               </div>
 
-              <p class="notes">
-                ※運転手への車代 … けんさん号 12,000 / ザッキィー号 10,000 / ゆうじろうくん号 10,500<br>
-                （あつめ 32,900 − 支払 32,500 = 予備 400円）
-              </p>
+              <div class="nagomi-tab-panels">
+                <div class="nagomi-tab-panel is-active" data-panel="wallet" role="tabpanel">
+                  <div id="budget_wallet" class="nagomi-wallet-grid"></div>
+                </div>
+                <div class="nagomi-tab-panel" data-panel="deposits" role="tabpanel" hidden>
+                  <div id="budget_deposits" class="nagomi-deposit-list"></div>
+                </div>
+                <div class="nagomi-tab-panel" data-panel="expenses" role="tabpanel" hidden>
+                  <div class="nagomi-expense-toolbar">
+                    <button type="button" class="m_btn_main js_expense_open"><a href="javascript:void(0)">支出を登録</a></button>
+                    <label class="nagomi-check-inline"><input type="checkbox" id="show_deleted_expenses"> 削除済みを表示</label>
+                  </div>
+                  <div id="budget_expenses" class="nagomi-expense-list"></div>
+                </div>
+                <div class="nagomi-tab-panel" data-panel="settlement" role="tabpanel" hidden>
+                  <div id="budget_settlement_summary" class="nagomi-wallet-grid"></div>
+                  <div id="budget_settlement" class="nagomi-settle-list"></div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -880,6 +814,14 @@
                         <button type="button" class="js_list_add" data-store="pack" data-name="ゆうじろうくん">＋</button>
                       </div>
                     </div>
+                    <div class="pack-card" data-name="ゆうじろうくん彼女">
+                      <h4><span class="av" style="background:#b0568f">彼</span>ゆうじろうくん彼女</h4>
+                      <div class="js_list" data-store="pack" data-name="ゆうじろうくん彼女"></div>
+                      <div class="add-row">
+                        <input type="text" class="js_list_input" data-store="pack" data-name="ゆうじろうくん彼女" placeholder="持ち物" autocomplete="off">
+                        <button type="button" class="js_list_add" data-store="pack" data-name="ゆうじろうくん彼女">＋</button>
+                      </div>
+                    </div>
                   </div>
                 </dd>
               </dl>
@@ -964,7 +906,7 @@
         <button type="button" class="js_name_btn" data-name="けいちゃん">けいちゃん</button>
         <button type="button" class="js_name_btn" data-name="けいくん">けいくん</button>
         <button type="button" class="js_name_btn" data-name="ゆうじろうくん">ゆうじろうくん</button>
-        <button type="button" class="js_name_btn" data-name="ゆうじろう彼女">ゆうじろう彼女</button>
+        <button type="button" class="js_name_btn" data-name="ゆうじろうくん彼女">ゆうじろうくん彼女</button>
         <button type="button" class="js_name_btn -guest" data-name="ゲスト">その他（ゲスト）</button>
       </div>
     </div>
@@ -972,6 +914,69 @@
 
   <!-- toast -->
   <div id="toast" role="status" aria-live="polite">保存しました ✓</div>
+
+  <!-- expense modal -->
+  <div id="expense_modal" class="nagomi-modal" aria-hidden="true">
+    <div class="inner" role="dialog" aria-modal="true" aria-labelledby="expense_modal_ttl">
+      <button type="button" class="nagomi-modal-close js_expense_close" aria-label="閉じる">×</button>
+      <h2 id="expense_modal_ttl">支出を登録</h2>
+      <form id="expense_form" class="nagomi-expense-form">
+        <input type="hidden" name="expenseId" value="">
+        <label>購入内容
+          <input type="text" name="title" required placeholder="例：ロピア BBQ食材" autocomplete="off">
+        </label>
+        <label>金額（円）
+          <input type="number" name="amount" required min="0" step="1" inputmode="numeric" placeholder="28500">
+        </label>
+        <label>カテゴリー
+          <select name="category">
+            <option value="food">食材</option>
+            <option value="drink">飲み物</option>
+            <option value="supplies">用品</option>
+            <option value="accommodation">宿泊</option>
+            <option value="transportation">交通</option>
+            <option value="rental">レンタル</option>
+            <option value="pet">ペット</option>
+            <option value="other">その他</option>
+          </select>
+        </label>
+        <label>購入者
+          <select name="purchaserId" id="expense_purchaser"></select>
+        </label>
+        <label>支払方法
+          <select name="paymentSource">
+            <option value="common-wallet">共同財布から支払い</option>
+            <option value="personal-advance">個人立替</option>
+          </select>
+        </label>
+        <label>負担グループ
+          <select name="allocationType" id="expense_allocation">
+            <option value="all11">全員11人</option>
+            <option value="cottage9">コテージ共同組9人</option>
+            <option value="car8">車代負担者8人</option>
+            <option value="yujiroOnly">ゆうじろうくんのみ</option>
+            <option value="custom">個別選択</option>
+          </select>
+        </label>
+        <fieldset class="nagomi-custom-people" id="expense_custom_people" hidden>
+          <legend>対象者</legend>
+          <div class="nagomi-people-checks" id="expense_people_checks"></div>
+        </fieldset>
+        <label>レシートURL（任意）
+          <input type="url" name="receiptUrl" placeholder="https://...">
+        </label>
+        <label>メモ
+          <textarea name="memo" rows="2" placeholder="補足があれば"></textarea>
+        </label>
+        <div class="nagomi-alloc-preview" id="expense_preview"></div>
+        <p class="nagomi-form-error" id="expense_error" hidden></p>
+        <div class="nagomi-form-actions">
+          <button type="button" class="nagomi-btn-ghost js_expense_close">キャンセル</button>
+          <button type="submit" class="nagomi-btn-primary">登録する</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- stub for original app.js (Swiper modal) -->
   <div id="l_modal" class="js_modal -stub" aria-hidden="true">

@@ -1385,3 +1385,447 @@
     margin:0 !important;
   }
 }
+
+/* ========== Budget tabs / settlement UI ========== */
+#page_top #campaign .nagomi-special-note{
+  margin-top:1.2rem;
+  font-size:1.35rem;
+  letter-spacing:.06em;
+  color:#1b6e8c;
+  font-weight:700;
+}
+#page_top #campaign .nagomi-budget-panel{
+  margin-top:2.4rem;
+}
+#page_top #campaign .nagomi-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.8rem;
+  margin-bottom:2rem;
+}
+#page_top #campaign .nagomi-tab{
+  width:auto;
+  min-width:0;
+  border:.2rem solid #333;
+  border-radius:10rem;
+  background:#fff;
+  padding:1rem 1.6rem;
+  font-size:1.35rem;
+  font-weight:700;
+  letter-spacing:.06em;
+  cursor:pointer;
+  transition:background .25s,color .25s;
+}
+#page_top #campaign .nagomi-tab.is-active,
+#page_top #campaign .nagomi-tab:hover{
+  background:#4eb1d8;
+  color:#fff;
+  opacity:1;
+}
+#page_top #campaign .nagomi-wallet-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:1.2rem;
+}
+#page_top #campaign .nagomi-stat-card{
+  background:#f5fbfd;
+  border:.2rem solid #333;
+  border-radius:1.2rem;
+  padding:1.4rem 1.6rem;
+}
+#page_top #campaign .nagomi-stat-card .label{
+  font-size:1.2rem;
+  color:#555;
+  letter-spacing:.06em;
+  margin-bottom:.6rem;
+}
+#page_top #campaign .nagomi-stat-card .value{
+  font-family:Outfit,sans-serif;
+  font-size:2rem;
+  font-weight:700;
+  text-align:right;
+  letter-spacing:.04em;
+  line-height:1.2;
+}
+#page_top #campaign .nagomi-stat-card.is-balance .value{color:#1b6e8c}
+#page_top #campaign .nagomi-stat-card.is-refund .value{color:#2f7d4a}
+#page_top #campaign .nagomi-stat-card.is-collect .value{color:#c9536f}
+#page_top #campaign .nagomi-stat-card.is-ok .value{color:#2f7d4a}
+#page_top #campaign .nagomi-stat-card.is-warn .value{color:#c9536f}
+#page_top #campaign .nagomi-diff-warn{
+  grid-column:1 / -1;
+  margin-top:.4rem;
+  padding:1.2rem 1.4rem;
+  border:.2rem solid #c9536f;
+  border-radius:1rem;
+  background:#fff5f7;
+  color:#a12845;
+  font-size:1.35rem;
+  font-weight:700;
+  line-height:1.6;
+}
+#page_top #campaign .nagomi-deposit-list,
+#page_top #campaign .nagomi-expense-list,
+#page_top #campaign .nagomi-settle-list{
+  display:flex;
+  flex-direction:column;
+  gap:1.4rem;
+}
+#page_top #campaign .nagomi-person-card,
+#page_top #campaign .nagomi-expense-card{
+  background:#f7f7f7;
+  border:.2rem solid #333;
+  border-radius:1.2rem;
+  padding:1.6rem;
+}
+#page_top #campaign .nagomi-expense-card.is-deleted{opacity:.55}
+#page_top #campaign .nagomi-person-card > header,
+#page_top #campaign .nagomi-expense-card > header{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  margin-bottom:1.2rem;
+  flex-wrap:wrap;
+}
+#page_top #campaign .nagomi-expense-card > header .num{
+  margin-left:auto;
+  font-family:Outfit,sans-serif;
+  font-size:2rem;
+  font-weight:700;
+}
+#page_top #campaign .nagomi-kv{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem 1.2rem;
+}
+#page_top #campaign .nagomi-kv dt{
+  font-size:1.15rem;
+  color:#666;
+  font-weight:500;
+  letter-spacing:.04em;
+}
+#page_top #campaign .nagomi-kv dd{
+  font-size:1.45rem;
+  font-weight:700;
+  margin-top:.2rem;
+}
+#page_top #campaign .nagomi-kv dd.num,
+#page_top #campaign .num{text-align:right}
+#page_top #campaign .nagomi-kv .is-refund{color:#2f7d4a}
+#page_top #campaign .nagomi-kv .is-collect{color:#c9536f}
+#page_top #campaign .nagomi-status{
+  margin-left:auto;
+  display:inline-flex;
+  align-items:center;
+  padding:.4rem 1rem;
+  border-radius:10rem;
+  border:.15rem solid #333;
+  background:#e8e8e8;
+  font-size:1.15rem;
+  font-weight:700;
+}
+#page_top #campaign .nagomi-status.is-paid{background:#d4ebd0}
+#page_top #campaign .nagomi-status.is-partial{background:#fdefcd}
+#page_top #campaign .nagomi-status.is-unpaid{background:#f0f0f0}
+#page_top #campaign .js_deposit_input{
+  width:100%;
+  border:.2rem solid #333;
+  border-radius:.8rem;
+  padding:.8rem 1rem;
+  background:#fff;
+  text-align:right;
+  font-weight:700;
+}
+#page_top #campaign .nagomi-expense-toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:1.2rem;
+  margin-bottom:1.6rem;
+}
+#page_top #campaign .nagomi-check-inline{
+  display:inline-flex;
+  align-items:center;
+  gap:.6rem;
+  font-size:1.3rem;
+  font-weight:700;
+}
+#page_top #campaign .nagomi-meta-list{
+  list-style:none;
+  margin:0 0 1.2rem;
+  padding:0;
+  font-size:1.3rem;
+  line-height:1.7;
+  color:#444;
+}
+#page_top #campaign .nagomi-meta-list .warn{color:#c9536f;font-weight:700}
+#page_top #campaign .nagomi-card-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.8rem;
+}
+#page_top #campaign .nagomi-btn-ghost,
+#page_top #campaign .nagomi-btn-primary,
+.nagomi-modal .nagomi-btn-ghost,
+.nagomi-modal .nagomi-btn-primary{
+  width:auto;
+  border:.2rem solid #333;
+  border-radius:10rem;
+  padding:1rem 1.6rem;
+  font-weight:700;
+  font-size:1.3rem;
+  cursor:pointer;
+}
+#page_top #campaign .nagomi-btn-ghost,
+.nagomi-modal .nagomi-btn-ghost{background:#fff}
+#page_top #campaign .nagomi-btn-primary,
+.nagomi-modal .nagomi-btn-primary{background:#deeef5}
+#page_top #campaign .nagomi-card-toggle{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  background:transparent;
+  padding:0;
+  margin-bottom:1.2rem;
+  cursor:pointer;
+  text-align:left;
+}
+#page_top #campaign .nagomi-card-toggle .left{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+}
+#page_top #campaign .nagomi-breakdown{
+  margin-top:1.2rem;
+  padding-top:1.2rem;
+  border-top:.15rem dashed #bbb;
+}
+#page_top #campaign .nagomi-breakdown h4{
+  font-size:1.4rem;
+  margin-bottom:1rem;
+  letter-spacing:.08em;
+}
+#page_top #campaign .nagomi-breakdown ul{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+#page_top #campaign .nagomi-breakdown li{
+  display:grid;
+  gap:.2rem;
+  padding:1rem 0;
+  border-bottom:1px solid #e5e5e5;
+  font-size:1.3rem;
+}
+#page_top #campaign .nagomi-breakdown li em{
+  color:#666;
+  font-style:normal;
+  font-size:1.15rem;
+}
+#page_top #campaign .nagomi-breakdown li.total{
+  border-bottom:none;
+  font-size:1.5rem;
+  display:flex;
+  justify-content:space-between;
+  padding-top:1.2rem;
+}
+#page_top #campaign .nagomi-inline-select{
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+  margin:1rem 0;
+  font-size:1.25rem;
+  font-weight:700;
+}
+#page_top #campaign .nagomi-inline-select select{
+  border:.2rem solid #333;
+  border-radius:.8rem;
+  padding:.8rem 1rem;
+  background:#fff;
+  width:100%;
+}
+#page_top #campaign .nagomi-muted{
+  font-size:1.25rem;
+  color:#666;
+  margin-top:.8rem;
+}
+#page_top #campaign .nagomi-shop-extra{
+  flex-basis:100%;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:.8rem;
+  margin-top:.8rem;
+  padding-top:.8rem;
+  border-top:1px dashed #ccc;
+}
+#page_top #campaign .nagomi-shop-extra input[type=number]{
+  width:12rem;
+  border:.15rem solid #333;
+  border-radius:.8rem;
+  padding:.6rem .8rem;
+  background:#fff;
+}
+#page_top #campaign .nagomi-pill{
+  display:inline-flex;
+  padding:.4rem 1rem;
+  border-radius:10rem;
+  border:.15rem solid #333;
+  font-size:1.15rem;
+  font-weight:700;
+}
+#page_top #campaign .nagomi-pill.is-ok{background:#d4ebd0}
+#page_top #campaign .list-row{
+  flex-wrap:wrap;
+}
+
+/* Expense modal */
+.nagomi-modal{
+  position:fixed;
+  inset:0;
+  z-index:650;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  background:rgba(51,51,51,.55);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .3s,visibility .3s;
+  padding:0;
+}
+.nagomi-modal.is-show{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+.nagomi-modal .inner{
+  width:100%;
+  max-width:64rem;
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  border:.3rem solid #333;
+  border-radius:2rem 2rem 0 0;
+  padding:2.8rem 2rem 3.2rem;
+  position:relative;
+}
+.nagomi-modal .nagomi-modal-close{
+  position:absolute;
+  top:1.2rem;
+  right:1.6rem;
+  width:4rem;
+  height:4rem;
+  border:.2rem solid #333;
+  border-radius:50%;
+  background:#f5f5f5;
+  font-size:2.2rem;
+  line-height:1;
+  cursor:pointer;
+}
+.nagomi-modal h2{
+  font-family:YakuHanMP,'游明朝','Yu Mincho',serif,sans-serif;
+  font-weight:400;
+  font-size:2.2rem;
+  letter-spacing:.12em;
+  margin-bottom:2rem;
+  padding-right:4rem;
+}
+.nagomi-expense-form{
+  display:flex;
+  flex-direction:column;
+  gap:1.4rem;
+}
+.nagomi-expense-form label{
+  display:flex;
+  flex-direction:column;
+  gap:.6rem;
+  font-size:1.3rem;
+  font-weight:700;
+  width:100%;
+}
+.nagomi-expense-form input,
+.nagomi-expense-form select,
+.nagomi-expense-form textarea{
+  border:.2rem solid #333;
+  border-radius:.8rem;
+  padding:1rem 1.2rem;
+  background:#fff;
+  font-weight:500;
+  width:100%;
+}
+.nagomi-custom-people{
+  border:.2rem solid #333;
+  border-radius:1rem;
+  padding:1.2rem;
+}
+.nagomi-custom-people legend{
+  padding:0 .6rem;
+  font-weight:700;
+}
+.nagomi-people-checks{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.8rem;
+}
+.nagomi-people-checks label{
+  flex-direction:row;
+  align-items:center;
+  gap:.6rem;
+  font-weight:500;
+}
+.nagomi-alloc-preview{
+  background:#f5fbfd;
+  border:.2rem solid #333;
+  border-radius:1rem;
+  padding:1.4rem;
+  font-size:1.35rem;
+  line-height:1.7;
+}
+.nagomi-alloc-preview ul{list-style:none;margin:.8rem 0;padding:0}
+.nagomi-form-error{
+  color:#c9536f;
+  font-weight:700;
+  font-size:1.35rem;
+}
+.nagomi-form-actions{
+  display:flex;
+  gap:1rem;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  margin-top:.8rem;
+}
+
+@media screen and (min-width:768px){
+  #page_top #campaign .nagomi-wallet-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  .nagomi-modal{
+    align-items:center;
+    padding:2rem;
+  }
+  .nagomi-modal .inner{
+    border-radius:2rem;
+    padding:3.2rem;
+  }
+}
+@media screen and (max-width:767px){
+  #page_top #campaign .nagomi-tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  #page_top #campaign .nagomi-tab{
+    text-align:center;
+    padding:1.2rem .8rem;
+    font-size:1.25rem;
+  }
+  #page_top #campaign .nagomi-wallet-grid{
+    grid-template-columns:1fr;
+  }
+  #page_top #campaign .nagomi-kv{
+    grid-template-columns:1fr;
+  }
+  .nagomi-people-checks{grid-template-columns:1fr}
+}
