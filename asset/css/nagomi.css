@@ -865,6 +865,7 @@
   html,body{
     overflow-x:hidden !important;
     max-width:100vw;
+    touch-action:manipulation;
   }
   body{
     min-width:0 !important;
@@ -876,6 +877,13 @@
   #page_top #link{
     overflow-x:hidden;
     max-width:100%;
+  }
+  #page_top #campaign .wrap,
+  #page_top #campaign .infoArea,
+  #page_top #campaign .nagomi-budget-panel{
+    max-width:100% !important;
+    overflow-x:hidden;
+    box-sizing:border-box;
   }
   .m_box_fixed{
     width:100% !important;
@@ -1831,6 +1839,11 @@
 }
 
 /* ========== Simple per-person budget list ========== */
+html{
+  touch-action:manipulation;
+  -ms-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
 #page_top #campaign .nagomi-rules{
   margin-bottom:2rem;
   border:.2rem solid #333;
@@ -1854,9 +1867,18 @@
   font-size:1.35rem;
   line-height:1.8;
   letter-spacing:.03em;
+  overflow-wrap:anywhere;
+  word-break:break-word;
 }
 #page_top #campaign .nagomi-rules-body p{margin:0 0 1.4rem}
 #page_top #campaign .nagomi-rules-body p:last-child{margin-bottom:0}
+#page_top #campaign .nagomi-simple-card,
+#page_top #campaign .nagomi-people-simple,
+#page_top #campaign .nagomi-budget-panel{
+  max-width:100%;
+  box-sizing:border-box;
+  overflow-wrap:anywhere;
+}
 #page_top #campaign .nagomi-simple-toolbar{
   display:flex;
   flex-wrap:wrap;
