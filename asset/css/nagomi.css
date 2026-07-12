@@ -1275,7 +1275,8 @@
     max-width:100% !important;
     padding:1.6rem 1.2rem !important;
     box-sizing:border-box !important;
-    overflow:hidden;
+    overflow-x:hidden;
+    overflow-y:visible;
   }
   #page_top #campaign .wrap .infoArea .entry{
     display:block !important;

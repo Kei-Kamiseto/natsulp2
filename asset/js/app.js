@@ -310,11 +310,16 @@
     }
 
     if (expenseEl) {
-      var expenses = B.activeExpenses(budget).slice().sort(function (a, b) {
+      var expenses = B.activeExpenses(budget).filter(function (ex) {
+        return !ex.isInitialExpense;
+      }).slice().sort(function (a, b) {
+        var ta = a.createdAt || '';
+        var tb = b.createdAt || '';
+        if (ta !== tb) return ta < tb ? 1 : -1;
         return (b.amount || 0) - (a.amount || 0);
       });
       if (!expenses.length) {
-        expenseEl.innerHTML = '<p class="nagomi-expense-empty">まだ支出はありません</p>';
+        expenseEl.innerHTML = '<p class="nagomi-expense-empty">「支出を追加」で登録した支出がここに表示されます</p>';
       } else {
         expenseEl.innerHTML = expenses.map(function (ex) {
           var cat = B.CATEGORY_LABELS[ex.category] || ex.category || 'その他';
