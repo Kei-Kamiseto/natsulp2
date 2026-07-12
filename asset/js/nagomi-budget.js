@@ -4,7 +4,7 @@
 (function (global) {
   'use strict';
 
-  var DATA_VERSION = 4;
+  var DATA_VERSION = 5;
   var INITIAL_DEPOSIT = 20000;
   var ADMIN_NAME = 'けいくん';
 

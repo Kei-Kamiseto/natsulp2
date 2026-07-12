@@ -1007,26 +1007,47 @@
   }
 
   /* ---------- Load & bind ---------- */
-  async function loadAll() {
-    var FRESH_START_V = 3;
-    var freshV = 0;
-    try {
-      freshV = Number(localStorage.getItem('nagomi_fresh_start_v') || 0);
-    } catch (e) { /* ignore */ }
+  async function applyFreshStartState() {
+    state.events = emptyEvents();
+    state.shared = [];
+    state.konan = ensureKonanDefaults(DEFAULTS.konan.slice());
+    state.ropia = DEFAULTS.ropia.slice();
+    state.pack = emptyPack();
+    state.board = [];
+    state.budget = B.createDefaultBudget();
+    // 念のため入金を明示ゼロ、追加支出は除去
+    B.PARTICIPANTS.forEach(function (p) {
+      var dep = state.budget.deposits[p.id];
+      if (!dep) return;
+      dep.paidDeposit = 0;
+      dep.depositStatus = 'unpaid';
+      dep.paidAt = '';
+      dep.updatedBy = '';
+      dep.updatedAt = '';
+    });
+    state.budget.expenses = (state.budget.expenses || []).filter(function (e) {
+      return !!e.isInitialExpense;
+    });
+    state.budget.version = B.DATA_VERSION;
+  }
 
-    if (freshV < FRESH_START_V) {
-      // 入金・参加者・追加支出・買い出し金額などをゼロのスタート状態へ
-      state.events = emptyEvents();
-      state.shared = [];
-      state.konan = ensureKonanDefaults(DEFAULTS.konan.slice());
-      state.ropia = DEFAULTS.ropia.slice();
-      state.pack = emptyPack();
-      state.board = [];
-      state.budget = B.createDefaultBudget();
+  async function loadAll() {
+    var FRESH_START_V = 5;
+    var localFresh = 0;
+    try {
+      localFresh = Number(localStorage.getItem('nagomi_fresh_start_v') || 0);
+    } catch (e) { /* ignore */ }
+    var sharedFresh = await store.get('freshStart', { v: 0 });
+    var sharedV = sharedFresh && typeof sharedFresh === 'object' ? Number(sharedFresh.v || 0) : 0;
+    var needFresh = Math.max(localFresh, sharedV) < FRESH_START_V;
+
+    if (needFresh) {
+      await applyFreshStartState();
       try {
         localStorage.setItem('nagomi_fresh_start_v', String(FRESH_START_V));
-        localStorage.setItem('nagomi_events_seed_v', '3');
+        localStorage.setItem('nagomi_events_seed_v', '5');
       } catch (e) { /* ignore */ }
+      await store.set('freshStart', { v: FRESH_START_V }, true);
     } else {
       state.events = migrateEvents(await store.get('events', DEFAULTS.events));
       state.shared = await store.get('shared', DEFAULTS.shared);
@@ -1037,11 +1058,7 @@
 
       var rawBudget = await store.get('budget', null);
       var shaped = B.ensureBudgetShape(rawBudget);
-      if (shaped) {
-        state.budget = shaped;
-      } else {
-        state.budget = B.createDefaultBudget();
-      }
+      state.budget = shaped || B.createDefaultBudget();
     }
 
     // persist start / migrated state
