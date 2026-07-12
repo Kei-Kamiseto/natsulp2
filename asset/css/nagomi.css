@@ -363,27 +363,90 @@
   display:block;
 }
 
-/* Program schedule image (same footprint as previous board) */
+/* Program schedule (HTML) */
 #page_top #program .nagomi-schedule{
-  max-width:96rem;
+  max-width:72rem;
   width:100%;
   margin:0 auto;
-  border:none;
-  background:transparent;
-  overflow:hidden;
 }
-#page_top #program .nagomi-schedule img{
+#page_top #program .schedule-board{
+  background:#fff;
+  border:.25rem solid #333;
+  border-radius:1.6rem;
+  padding:3.2rem 3.6rem 2.8rem;
+  box-sizing:border-box;
+}
+#page_top #program .schedule-kicker{
+  font-family:Outfit,sans-serif;
+  font-size:1.4rem;
+  letter-spacing:.28em;
+  color:#4eb1d8;
+  font-weight:700;
+  margin-bottom:2.4rem;
+  text-align:center;
+}
+#page_top #program .schedule-day + .schedule-day{
+  margin-top:3.2rem;
+  padding-top:2.8rem;
+  border-top:.15rem dashed #c9c9c9;
+}
+#page_top #program .schedule-day-hd{
+  font-family:Outfit,sans-serif;
+  font-size:2rem;
+  letter-spacing:.12em;
+  margin-bottom:1.6rem;
+  color:#333;
+}
+#page_top #program .schedule-day-hd em{
+  font-style:normal;
+  font-weight:700;
+  color:#4eb1d8;
+  margin-right:.4rem;
+}
+#page_top #program .schedule-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+#page_top #program .schedule-list li{
+  display:grid;
+  grid-template-columns:7.2rem 1fr;
+  gap:1.2rem 1.6rem;
+  align-items:start;
+  padding:1.2rem 0;
+  border-bottom:1px solid #ebebeb;
+}
+#page_top #program .schedule-list li:last-child{border-bottom:none}
+#page_top #program .schedule-list time{
+  font-family:Outfit,sans-serif;
+  font-size:1.5rem;
+  font-weight:700;
+  letter-spacing:.04em;
+  color:#4eb1d8;
+  line-height:1.4;
+  padding-top:.15rem;
+}
+#page_top #program .schedule-list strong{
   display:block;
-  width:100%;
-  max-width:96rem;
-  height:auto;
-  margin:0 auto;
+  font-size:1.55rem;
+  font-weight:700;
+  letter-spacing:.04em;
+  line-height:1.5;
+  margin-bottom:.2rem;
 }
-@media screen and (max-width:767px){
-  #page_top #program .nagomi-schedule{
-    max-width:100%;
-    padding:0 1rem;
-  }
+#page_top #program .schedule-list span{
+  display:block;
+  font-size:1.3rem;
+  color:#666;
+  line-height:1.6;
+  letter-spacing:.03em;
+}
+#page_top #program .schedule-note{
+  margin-top:2.4rem;
+  font-size:1.2rem;
+  color:#888;
+  line-height:1.7;
+  letter-spacing:.03em;
 }
 
 /* Hide original Hyogo logo mark ("兵庫の日常へ 旅しよう。") */
@@ -789,6 +852,13 @@
     min-width:0 !important;
     width:100% !important;
   }
+  #page_top,
+  #page_top #campaign,
+  #page_top #program,
+  #page_top #link{
+    overflow-x:hidden;
+    max-width:100%;
+  }
   .m_box_fixed{
     width:100% !important;
     max-width:100% !important;
@@ -985,6 +1055,9 @@
     margin:0 0 1.2rem !important;
     padding:1rem 1.4rem !important;
   }
+  #page_top #link h3:before{
+    display:none !important;
+  }
   #page_top #link h3.nagomi-link-hd span{
     white-space:normal !important;
     font-size:1.8rem !important;
@@ -992,6 +1065,8 @@
   }
   #page_top #link .type{
     position:static !important;
+    top:auto !important;
+    right:auto !important;
     margin:0 0 1.4rem !important;
     font-size:1.4rem !important;
   }
@@ -1016,10 +1091,20 @@
     object-fit:cover;
   }
   #page_top #link .lead{
+    position:static !important;
+    top:auto !important;
+    left:auto !important;
+    right:auto !important;
     display:block !important;
-    margin-top:1.4rem;
+    margin-top:1.4rem !important;
     font-size:1.35rem;
     line-height:1.7;
+    z-index:auto !important;
+  }
+  #page_top #link .lead span{
+    display:inline;
+    background:#fff;
+    padding:.25rem .4rem;
   }
 
   /* ---- life / food / story: ビジュアル全幅 ---- */
@@ -1137,6 +1222,65 @@
   #page_top #yoppie .wrap,
   #page_top #campaign .wrap{
     width:100% !important;
+    max-width:100% !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    padding:2rem 1.2rem !important;
+    box-sizing:border-box !important;
+  }
+  #page_top #campaign .m_box_fixed{
+    width:100% !important;
+    max-width:100% !important;
+    padding-left:1.2rem !important;
+    padding-right:1.2rem !important;
+    box-sizing:border-box !important;
+  }
+  #page_top #campaign .wrap .infoArea{
+    width:100% !important;
+    max-width:100% !important;
+    padding:1.6rem 1.2rem !important;
+    box-sizing:border-box !important;
+    overflow:hidden;
+  }
+  #page_top #campaign .wrap .infoArea .entry{
+    display:block !important;
+    width:100% !important;
+    max-width:100%;
+  }
+  #page_top #campaign .wrap .infoArea .entry dt{
+    display:inline-block !important;
+    max-width:100%;
+    box-sizing:border-box;
+    white-space:normal;
+    letter-spacing:.08em !important;
+    margin-bottom:1.2rem;
+  }
+  #page_top #campaign .wrap .infoArea .entry dd{
+    width:100% !important;
+    max-width:100%;
+    box-sizing:border-box;
+  }
+  #page_top #campaign .pack-grid{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:1.2rem !important;
+    width:100% !important;
+    max-width:100%;
+  }
+  #page_top #campaign .pack-card{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+  #page_top #campaign .add-row{
+    width:100%;
+    min-width:0;
+  }
+  #page_top #campaign .add-row input[type=text]{
+    min-width:0 !important;
+    flex:1 1 auto !important;
+    width:auto !important;
     max-width:100%;
   }
   #page_top #message .btn a{
@@ -1148,17 +1292,41 @@
     max-width:100%;
     width:auto;
   }
-  #page_top #program .nagomi-schedule,
-  #page_top #program .nagomi-schedule img{
+  #page_top #program .ttl{
+    margin-bottom:3.2rem !important;
+    padding:0 1rem;
+  }
+  #page_top #program .ttl h2 span:after,
+  #page_top #program .ttl h2 span:before{
+    display:none !important;
+  }
+  #page_top #program .nagomi-schedule{
     max-width:100% !important;
     width:100% !important;
-    height:auto !important;
+    padding:0 !important;
+  }
+  #page_top #program .schedule-board{
+    padding:2rem 1.6rem 1.8rem !important;
+    border-radius:1.2rem;
+  }
+  #page_top #program .schedule-list li{
+    grid-template-columns:6.4rem 1fr;
+    gap:.8rem 1rem;
+    padding:1.1rem 0;
+  }
+  #page_top #program .schedule-list time{font-size:1.35rem}
+  #page_top #program .schedule-list strong{font-size:1.45rem}
+  #page_top #program .schedule-list span{font-size:1.25rem}
+  #page_top #campaign .pay-row{
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
   }
   #page_top #campaign .pay-row .checks{
     margin-left:0;
     width:100%;
   }
-  #page_top #campaign .pack-grid{grid-template-columns:1fr}
+  #page_top #campaign .pack-grid{grid-template-columns:1fr !important}
 
   #name_modal .inner{padding:2.4rem 1.6rem}
   #name_modal .name-grid{grid-template-columns:1fr}

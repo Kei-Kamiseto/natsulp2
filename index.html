@@ -33,10 +33,10 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=sp3">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=sp4">
 
   <script src="./asset/js/vender.js"></script>
-  <script defer src="./asset/js/app.js?v=sp3"></script>
+  <script defer src="./asset/js/app.js?v=sp4"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
@@ -562,7 +562,128 @@
           </div>
 
           <div class="nagomi-schedule js_anim_scroll -fadein">
-            <img src="./asset/img/nagomi/program_schedule.png" alt="PROGRAM SCHEDULE 7.26 SUN / 7.27 MON" width="1024" height="372">
+            <div class="schedule-board">
+              <p class="schedule-kicker">PROGRAM SCHEDULE</p>
+
+              <section class="schedule-day">
+                <h3 class="schedule-day-hd"><em>7.26</em> SUN</h3>
+                <ol class="schedule-list">
+                  <li>
+                    <time datetime="09:30">9:30</time>
+                    <div>
+                      <strong>家庭料理「和み」前集合</strong>
+                      <span>荷物確認、車3台へ積み込み、出発準備</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time datetime="10:00">10:00</time>
+                    <div>
+                      <strong>コーナン今津店・ロピア</strong>
+                      <span>コーナンでBBQ用品、ロピアで食材を買い出し</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time datetime="11:00">11:00</time>
+                    <div>
+                      <strong>淡路じゃのひれへ出発</strong>
+                      <span>神戸淡路鳴門自動車道を利用</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time>途中</time>
+                    <div>
+                      <strong>淡路インターで休憩</strong>
+                      <span>昼食・トイレ・人数確認</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time>12:30頃</time>
+                    <div>
+                      <strong>淡路じゃのひれ到着</strong>
+                      <span>渋滞時は遅れあり。チェックイン・荷物整理</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time datetime="14:30">14:30〜</time>
+                    <div>
+                      <strong>SUP / テントサウナ / 釣り堀</strong>
+                      <span>残り組はBBQ準備・自由行動（〜16:30）</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time datetime="17:00">17:00〜</time>
+                    <div>
+                      <strong>待ちに待ったBBQ</strong>
+                      <span>みんなで食べて、飲んで、楽しむ</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time datetime="20:00">20:00〜</time>
+                    <div>
+                      <strong>線香花火大会</strong>
+                      <span>1人5本、線香花火の達人を決定</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time datetime="21:00">21:00〜</time>
+                    <div>
+                      <strong>和みババ抜き選手権</strong>
+                      <span>前回王者すみちゃんか、新生王者誕生か</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time>その後</time>
+                    <div>
+                      <strong>星空観賞</strong>
+                      <span>全員で外へ出て、満天の星空を見る</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time datetime="24:00">24:00〜</time>
+                    <div>
+                      <strong>消灯</strong>
+                      <span>各コテージへ戻って就寝</span>
+                    </div>
+                  </li>
+                </ol>
+              </section>
+
+              <section class="schedule-day">
+                <h3 class="schedule-day-hd"><em>7.27</em> MON</h3>
+                <ol class="schedule-list">
+                  <li>
+                    <time datetime="07:00">7:00</time>
+                    <div>
+                      <strong>起床</strong>
+                      <span>朝の淡路をひと呼吸</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time datetime="07:30">7:30</time>
+                    <div>
+                      <strong>モリモリ朝ごはん</strong>
+                      <span>けんさんの手作りシチューほか</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time datetime="09:00">9:00</time>
+                    <div>
+                      <strong>帰り支度</strong>
+                      <span>荷物まとめ・部屋の片づけ</span>
+                    </div>
+                  </li>
+                  <li>
+                    <time datetime="10:00">10:00</time>
+                    <div>
+                      <strong>チェックアウト</strong>
+                      <span>おつかれさまでした！</span>
+                    </div>
+                  </li>
+                </ol>
+              </section>
+
+              <p class="schedule-note">※天候や状況により、内容や時間が変更になる場合があります。</p>
+            </div>
           </div>
         </div>
       </section>
