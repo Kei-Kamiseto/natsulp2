@@ -342,8 +342,7 @@
 #page_top #food .creator .face img,
 #page_top #story .creator .face img,
 #page_top #yoppie .person img,
-#page_top #program .list img,
-#page_top #campaign .presentArea img{
+#page_top #program .list img{
   object-fit:cover;
 }
 
@@ -521,14 +520,6 @@
   background:linear-gradient(90deg,#d4ebd0,#fdefcd);
   transition:width .4s ease;
 }
-#page_top #campaign .presentArea .name small{
-  display:block;
-  margin-top:.4rem;
-  font-size:1.2rem;
-  font-weight:400;
-  color:#666;
-}
-
 /* Pay rows inside campaign */
 #page_top #campaign .pay-list{
   display:flex;
