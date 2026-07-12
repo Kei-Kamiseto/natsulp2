@@ -1008,46 +1008,50 @@
 
   /* ---------- Load & bind ---------- */
   async function loadAll() {
-    // 旧デフォルト参加者シードを一度クリア（最初はアイコンなし）
-    var eventsSeedVersion = 0;
+    var FRESH_START_V = 3;
+    var freshV = 0;
     try {
-      eventsSeedVersion = Number(localStorage.getItem('nagomi_events_seed_v') || 0);
+      freshV = Number(localStorage.getItem('nagomi_fresh_start_v') || 0);
     } catch (e) { /* ignore */ }
-    if (eventsSeedVersion < 2) {
+
+    if (freshV < FRESH_START_V) {
+      // 入金・参加者・追加支出・買い出し金額などをゼロのスタート状態へ
       state.events = emptyEvents();
-      try { localStorage.setItem('nagomi_events_seed_v', '2'); } catch (e) { /* ignore */ }
+      state.shared = [];
+      state.konan = ensureKonanDefaults(DEFAULTS.konan.slice());
+      state.ropia = DEFAULTS.ropia.slice();
+      state.pack = emptyPack();
+      state.board = [];
+      state.budget = B.createDefaultBudget();
+      try {
+        localStorage.setItem('nagomi_fresh_start_v', String(FRESH_START_V));
+        localStorage.setItem('nagomi_events_seed_v', '3');
+      } catch (e) { /* ignore */ }
     } else {
       state.events = migrateEvents(await store.get('events', DEFAULTS.events));
-    }
+      state.shared = await store.get('shared', DEFAULTS.shared);
+      state.konan = ensureKonanDefaults(await store.get('konan', DEFAULTS.konan));
+      state.ropia = normalizeShopList(await store.get('ropia', DEFAULTS.ropia), 'ropia');
+      state.pack = migratePack(await store.get('pack', DEFAULTS.pack));
+      state.board = await store.get('board', DEFAULTS.board);
 
-    state.shared = await store.get('shared', DEFAULTS.shared);
-    state.konan = ensureKonanDefaults(await store.get('konan', DEFAULTS.konan));
-    state.ropia = normalizeShopList(await store.get('ropia', DEFAULTS.ropia), 'ropia');
-    state.pack = migratePack(await store.get('pack', DEFAULTS.pack));
-    state.board = await store.get('board', DEFAULTS.board);
-
-    var rawBudget = await store.get('budget', null);
-    var shaped = B.ensureBudgetShape(rawBudget);
-    if (shaped) {
-      state.budget = shaped;
-    } else {
-      var oldPay = await store.get('pay', null);
-      if (oldPay) {
-        state.budget = B.migrateLegacyPay(oldPay);
+      var rawBudget = await store.get('budget', null);
+      var shaped = B.ensureBudgetShape(rawBudget);
+      if (shaped) {
+        state.budget = shaped;
       } else {
         state.budget = B.createDefaultBudget();
       }
-      await store.set('budget', state.budget, true);
-      // 旧10人/旧買い出しシードを新初期値へ
-      state.konan = ensureKonanDefaults(DEFAULTS.konan.slice());
-      state.ropia = DEFAULTS.ropia.slice();
     }
 
-    // persist migrated names once (silent)
+    // persist start / migrated state
+    await store.set('budget', state.budget, true);
     await store.set('events', state.events, true);
+    await store.set('shared', state.shared, true);
     await store.set('pack', state.pack, true);
     await store.set('konan', state.konan, true);
     await store.set('ropia', state.ropia, true);
+    await store.set('board', state.board, true);
 
     me = getMe();
 
