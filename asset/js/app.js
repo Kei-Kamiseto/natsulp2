@@ -276,6 +276,7 @@
     var el = document.getElementById('budget_people');
     var hint = document.getElementById('budget_hint');
     var walletEl = document.getElementById('budget_wallet_remain');
+    var expenseEl = document.getElementById('budget_expenses');
     if (!el) return;
     var budget = ensureBudgetReady();
     var sum = B.computeWalletSummary(budget);
@@ -306,6 +307,47 @@
     if (hint) {
       hint.textContent =
         '入金あり ' + sum.paidCount + ' / 11人 ／ みんなの入金合計 ' + B.formatYen(sum.paidDepositTotal);
+    }
+
+    if (expenseEl) {
+      var expenses = B.activeExpenses(budget).slice().sort(function (a, b) {
+        return (b.amount || 0) - (a.amount || 0);
+      });
+      if (!expenses.length) {
+        expenseEl.innerHTML = '<p class="nagomi-expense-empty">まだ支出はありません</p>';
+      } else {
+        expenseEl.innerHTML = expenses.map(function (ex) {
+          var cat = B.CATEGORY_LABELS[ex.category] || ex.category || 'その他';
+          var alloc = B.ALLOCATION_LABELS[ex.allocationType] || ex.allocationType || '';
+          var purchaser = ex.purchaserId && B.ID_TO_PARTICIPANT[ex.purchaserId]
+            ? B.ID_TO_PARTICIPANT[ex.purchaserId].name
+            : '';
+          var source = ex.paymentSource === 'personal-advance' ? '個人立替' : '共同財布';
+          var actions = admin
+            ? (
+              '<div class="nagomi-card-actions">' +
+                '<button type="button" class="nagomi-btn-ghost js_expense_edit" data-id="' + escapeHTML(ex.id) + '">編集</button>' +
+                '<button type="button" class="nagomi-btn-ghost js_expense_delete" data-id="' + escapeHTML(ex.id) + '">削除</button>' +
+              '</div>'
+            )
+            : '';
+          return (
+            '<article class="nagomi-expense-card" data-id="' + escapeHTML(ex.id) + '">' +
+              '<header>' +
+                '<h4>' + escapeHTML(ex.title || '（無題）') + '</h4>' +
+                '<span class="num">' + B.formatYen(ex.amount || 0) + '</span>' +
+              '</header>' +
+              '<ul class="nagomi-meta-list">' +
+                '<li>費目：' + escapeHTML(cat) + '</li>' +
+                '<li>わりかん：' + escapeHTML(alloc) + '</li>' +
+                '<li>支払い：' + escapeHTML(source) +
+                  (purchaser ? ' ／ 購入者 ' + escapeHTML(purchaser) : '') + '</li>' +
+              '</ul>' +
+              actions +
+            '</article>'
+          );
+        }).join('');
+      }
     }
 
     el.innerHTML = B.PARTICIPANTS.map(function (p) {
@@ -1008,6 +1050,18 @@
       var shopExp = e.target.closest('.js_shop_expense') || e.target.closest('.js_shop_to_expense');
       if (shopExp) {
         registerShopExpense(shopExp.getAttribute('data-store'), shopExp.getAttribute('data-id'));
+        return;
+      }
+      var editExp = e.target.closest('.js_expense_edit');
+      if (editExp) {
+        var editId = editExp.getAttribute('data-id');
+        var editRow = (ensureBudgetReady().expenses || []).find(function (x) { return x.id === editId; });
+        if (editRow) openExpenseModal(editRow);
+        return;
+      }
+      var delExp = e.target.closest('.js_expense_delete');
+      if (delExp) {
+        softDeleteExpense(delExp.getAttribute('data-id'));
       }
     });
 

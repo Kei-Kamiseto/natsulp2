@@ -1484,6 +1484,34 @@
   flex-direction:column;
   gap:1.4rem;
 }
+#page_top #campaign .nagomi-expense-section{
+  margin:0 0 2.4rem;
+}
+#page_top #campaign .nagomi-expense-section-ttl{
+  margin:0 0 1.2rem;
+  font-size:1.7rem;
+  letter-spacing:.08em;
+  font-weight:700;
+}
+#page_top #campaign .nagomi-expense-empty{
+  margin:0;
+  padding:1.6rem;
+  text-align:center;
+  font-size:1.4rem;
+  color:#666;
+  background:#f7f7f7;
+  border:.2rem dashed #aaa;
+  border-radius:1.2rem;
+}
+#page_top #campaign .nagomi-expense-card > header h4{
+  margin:0;
+  flex:1;
+  min-width:0;
+  font-size:1.7rem;
+  letter-spacing:.04em;
+  line-height:1.4;
+  word-break:break-word;
+}
 #page_top #campaign .nagomi-person-card,
 #page_top #campaign .nagomi-expense-card{
   background:#f7f7f7;

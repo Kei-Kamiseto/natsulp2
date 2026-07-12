@@ -64,11 +64,11 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=deposit1">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=expense1">
 
   <script src="./asset/js/vender.js"></script>
-  <script src="./asset/js/nagomi-budget.js?v=deposit1"></script>
-  <script defer src="./asset/js/app.js?v=deposit1"></script>
+  <script src="./asset/js/nagomi-budget.js?v=expense1"></script>
+  <script defer src="./asset/js/app.js?v=expense1"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
@@ -692,6 +692,11 @@
 
               <div id="budget_wallet_remain" class="nagomi-wallet-remain" aria-live="polite"></div>
               <p class="nagomi-simple-hint" id="budget_hint"></p>
+
+              <div class="nagomi-expense-section">
+                <h3 class="nagomi-expense-section-ttl">支出一覧</h3>
+                <div id="budget_expenses" class="nagomi-expense-list"></div>
+              </div>
 
               <div id="budget_people" class="nagomi-people-simple"></div>
             </div>
