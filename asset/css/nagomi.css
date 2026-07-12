@@ -1951,12 +1951,83 @@ html{
   flex-wrap:wrap;
   align-items:center;
   gap:1.2rem;
-  margin-bottom:1.6rem;
+  margin-bottom:1.2rem;
+}
+#page_top #campaign .nagomi-wallet-remain{
+  margin:0 0 1.2rem;
+  padding:1.8rem 1.6rem 1.6rem;
+  border:.25rem solid #333;
+  border-radius:1.4rem;
+  text-align:center;
+  background:#fff;
+}
+#page_top #campaign .nagomi-wallet-remain-label{
+  margin:0;
+  font-size:1.4rem;
+  font-weight:700;
+  letter-spacing:.08em;
+}
+#page_top #campaign .nagomi-wallet-remain-value{
+  margin:.6rem 0 .4rem;
+  font-family:Outfit,sans-serif;
+  font-size:3.4rem;
+  font-weight:700;
+  line-height:1.1;
+  letter-spacing:.02em;
+}
+#page_top #campaign .nagomi-wallet-remain-sub{
+  margin:0;
+  font-size:1.25rem;
+  color:#666;
+  letter-spacing:.03em;
+}
+#page_top #campaign .nagomi-wallet-remain.is-plus{
+  background:#e7f6ea;
+  color:#2f7d4a;
+}
+#page_top #campaign .nagomi-wallet-remain.is-minus{
+  background:#fff0f3;
+  color:#c9536f;
+}
+#page_top #campaign .nagomi-wallet-remain.is-zero{
+  background:#f0f0f0;
+  color:#555;
+}
+#page_top #campaign .nagomi-wallet-remain.is-plus .nagomi-wallet-remain-sub,
+#page_top #campaign .nagomi-wallet-remain.is-minus .nagomi-wallet-remain-sub,
+#page_top #campaign .nagomi-wallet-remain.is-zero .nagomi-wallet-remain-sub{
+  color:inherit;
+  opacity:.75;
 }
 #page_top #campaign .nagomi-simple-hint{
   font-size:1.3rem;
   color:#555;
   letter-spacing:.04em;
+  margin:0 0 1.6rem;
+}
+#page_top #campaign .nagomi-deposit-input-wrap{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  margin:0;
+}
+#page_top #campaign .nagomi-deposit-input-wrap input{
+  width:12rem;
+  max-width:46vw;
+  box-sizing:border-box;
+  border:.2rem solid #333;
+  border-radius:.8rem;
+  padding:.6rem .8rem;
+  font-family:Outfit,sans-serif;
+  font-size:2rem;
+  font-weight:700;
+  text-align:right;
+  background:#fff;
+}
+#page_top #campaign .nagomi-deposit-input-wrap em{
+  font-style:normal;
+  font-size:1.5rem;
+  font-weight:700;
 }
 #page_top #campaign .nagomi-people-simple{
   display:flex;

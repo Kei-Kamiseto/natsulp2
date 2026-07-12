@@ -275,14 +275,37 @@
   function renderBudget() {
     var el = document.getElementById('budget_people');
     var hint = document.getElementById('budget_hint');
+    var walletEl = document.getElementById('budget_wallet_remain');
     if (!el) return;
     var budget = ensureBudgetReady();
     var sum = B.computeWalletSummary(budget);
     var admin = isAdmin();
+    var active = document.activeElement;
+    var focusId = active && active.classList.contains('js_deposit_input')
+      ? active.getAttribute('data-id')
+      : null;
+    var focusValue = focusId ? active.value : null;
+    var focusSelStart = focusId && typeof active.selectionStart === 'number' ? active.selectionStart : null;
+    var focusSelEnd = focusId && typeof active.selectionEnd === 'number' ? active.selectionEnd : null;
+
+    var cash = sum.cashBalance;
+    var cashClass = cash > 0 ? 'is-plus' : (cash < 0 ? 'is-minus' : 'is-zero');
+    var cashLabel = cash > 0
+      ? '残金（余り）'
+      : (cash < 0 ? '残金（不足）' : '残金');
+
+    if (walletEl) {
+      walletEl.className = 'nagomi-wallet-remain ' + cashClass;
+      walletEl.innerHTML =
+        '<p class="nagomi-wallet-remain-label">' + cashLabel + '</p>' +
+        '<p class="nagomi-wallet-remain-value">' + B.formatYen(cash) + '</p>' +
+        '<p class="nagomi-wallet-remain-sub">入金合計 ' + B.formatYen(sum.paidDepositTotal) +
+          ' − 支出合計 ' + B.formatYen(sum.expenseTotal) + '</p>';
+    }
 
     if (hint) {
       hint.textContent =
-        '入金済み ' + sum.paidCount + ' / 11人 ／ みんなの入金合計 ' + B.formatYen(sum.paidDepositTotal);
+        '入金あり ' + sum.paidCount + ' / 11人 ／ みんなの入金合計 ' + B.formatYen(sum.paidDepositTotal);
     }
 
     el.innerHTML = B.PARTICIPANTS.map(function (p) {
@@ -297,24 +320,25 @@
           ? '残金（不足） ' + B.formatYen(remain)
           : '残金 0円');
 
-      var depositControl = admin
+      var depositLine = admin
         ? (
-          '<label class="nagomi-paid-toggle">' +
-            '<input type="checkbox" class="js_paid_toggle" data-id="' + p.id + '"' +
-              (paid >= B.INITIAL_DEPOSIT ? ' checked' : '') + '>' +
-            ' 20,000円 入金済みにする' +
-          '</label>'
+          '<p class="nagomi-deposit-line">' +
+            '<span>入金</span>' +
+            '<label class="nagomi-deposit-input-wrap">' +
+              '<input type="number" class="js_deposit_input" inputmode="numeric" min="0" step="1000" ' +
+                'data-id="' + p.id + '" value="' + paid + '" aria-label="' + escapeHTML(p.name) + 'の入金額">' +
+              '<em>円</em>' +
+            '</label>' +
+          '</p>'
         )
         : (
-          '<p class="nagomi-paid-state">' +
-            (paid >= B.INITIAL_DEPOSIT ? '入金済み' : (paid > 0 ? '一部入金 ' + B.formatYen(paid) : 'まだ未入金')) +
-          '</p>'
+          '<p class="nagomi-deposit-line"><span>入金</span><strong>' + B.formatYen(paid) + '</strong></p>'
         );
 
       return (
         '<article class="nagomi-simple-card" data-id="' + p.id + '">' +
           '<header>' + avatarHTML(p.name) + '<h3>' + escapeHTML(p.name) + '</h3></header>' +
-          '<p class="nagomi-deposit-line"><span>入金</span><strong>' + B.formatYen(paid) + '</strong></p>' +
+          depositLine +
           '<ul class="nagomi-cost-lines">' +
             '<li><span>コテージ費</span><em>' + B.formatYen(b.cottage) + '</em></li>' +
             '<li><span>食材費</span><em>' + B.formatYen(b.food) + '</em></li>' +
@@ -323,10 +347,20 @@
             (b.other ? '<li><span>その他</span><em>' + B.formatYen(b.other) + '</em></li>' : '') +
           '</ul>' +
           '<p class="nagomi-remain ' + remainClass + '">' + remainLabel + '</p>' +
-          depositControl +
         '</article>'
       );
     }).join('');
+
+    if (focusId) {
+      var restore = el.querySelector('.js_deposit_input[data-id="' + focusId + '"]');
+      if (restore) {
+        restore.focus();
+        if (focusValue != null) restore.value = focusValue;
+        if (focusSelStart != null && focusSelEnd != null) {
+          try { restore.setSelectionRange(focusSelStart, focusSelEnd); } catch (err) {}
+        }
+      }
+    }
   }
 
   async function saveDeposit(participantId, paidAmount) {
@@ -978,9 +1012,8 @@
     });
 
     document.addEventListener('change', function (e) {
-      if (e.target.classList.contains('js_paid_toggle')) {
-        var id = e.target.getAttribute('data-id');
-        saveDeposit(id, e.target.checked ? B.INITIAL_DEPOSIT : 0);
+      if (e.target.classList.contains('js_deposit_input')) {
+        saveDeposit(e.target.getAttribute('data-id'), e.target.value);
         return;
       }
       if (e.target.classList.contains('js_shop_amount')) {
@@ -990,6 +1023,13 @@
           e.target.value
         );
       }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      if (!e.target.classList.contains('js_deposit_input')) return;
+      e.preventDefault();
+      e.target.blur();
     });
   }
 

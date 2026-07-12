@@ -441,7 +441,7 @@
       paidDepositTotal += row.paidDeposit;
       refundTotal += row.refundAmount;
       additionalCollectionTotal += row.additionalAmount;
-      if (row.depositStatus === 'paid') paidCount++;
+      if (row.paidDeposit > 0) paidCount++;
     });
 
     var expenseTotal = paidWalletExpenses(budget).reduce(function (s, e) {
