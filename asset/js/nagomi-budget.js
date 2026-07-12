@@ -536,7 +536,7 @@
   }
 
   var DEFAULT_KONAN = [
-    { text: '炭追加3kg' },
+    { text: '木炭' },
     { text: '紙皿' },
     { text: 'はし' },
     { text: 'コップ' }

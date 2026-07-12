@@ -233,7 +233,7 @@
       if (btn) {
         var joined = me && list.indexOf(me) !== -1;
         btn.classList.toggle('is-joined', !!joined);
-        btn.textContent = joined ? '参加中' : '参加する';
+        btn.textContent = joined ? '参加中' : '参加はクリック！';
       }
     });
   }
@@ -973,11 +973,24 @@
     return out;
   }
 
+  function ensureKonanDefaults(list) {
+    var out = normalizeShopList(list || [], 'konan');
+    var charcoal = out.find(function (it) {
+      return it.text === '木炭' || it.text === '炭追加3kg' || it.text === '炭';
+    });
+    if (charcoal) {
+      charcoal.text = '木炭';
+    } else {
+      out.unshift(normalizeShopItem({ text: '木炭', done: false, by: '' }, 'konan'));
+    }
+    return out;
+  }
+
   /* ---------- Load & bind ---------- */
   async function loadAll() {
     state.events = migrateEvents(await store.get('events', DEFAULTS.events));
     state.shared = await store.get('shared', DEFAULTS.shared);
-    state.konan = normalizeShopList(await store.get('konan', DEFAULTS.konan), 'konan');
+    state.konan = ensureKonanDefaults(await store.get('konan', DEFAULTS.konan));
     state.ropia = normalizeShopList(await store.get('ropia', DEFAULTS.ropia), 'ropia');
     state.pack = migratePack(await store.get('pack', DEFAULTS.pack));
     state.board = await store.get('board', DEFAULTS.board);
@@ -995,7 +1008,7 @@
       }
       await store.set('budget', state.budget, true);
       // 旧10人/旧買い出しシードを新初期値へ
-      state.konan = DEFAULTS.konan.slice();
+      state.konan = ensureKonanDefaults(DEFAULTS.konan.slice());
       state.ropia = DEFAULTS.ropia.slice();
     }
 
