@@ -1,0 +1,13 @@
+.DS_Store
+*.log
+serve.py
+
+# local reference / screenshots (not needed for the site)
+_reference/
+FireShot*
+*.psd
+
+# editor / local
+.cursor/
+supabase/.env
+supabase/.env.*

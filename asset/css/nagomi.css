@@ -1,0 +1,801 @@
+/* =========================================================
+   nagomi.css — additive only. Keep original Hyogo LP layout.
+   ========================================================= */
+
+/* FV catch: 2 lines, overlaps into video (same shell as original) */
+#page_top #fv .ttlArea .catch h1.nagomi-catch{
+  display:block;
+  width:auto;
+  max-width:52rem;
+  font-family:YakuHanMP,'游明朝','Yu Mincho','游明朝体',YuMincho,'ヒラギノ明朝 Pro W3','Hiragino Mincho Pro',HiraMinProN-W3,'HGS明朝E','ＭＳ Ｐ明朝','MS PMincho',serif,sans-serif;
+  font-weight:400;
+  color:#333;
+  line-height:1.35;
+  letter-spacing:.18em;
+}
+#page_top #fv .ttlArea .catch h1.nagomi-catch span{
+  display:block!important;
+  height:auto!important;
+  writing-mode:horizontal-tb!important;
+  text-orientation:mixed!important;
+  font-size:5.6rem;
+  letter-spacing:.18em;
+  line-height:1.35;
+  padding:0;
+  transform:translateY(30%);
+  opacity:0;
+  transition:transform 1.3s cubic-bezier(.165,.84,.44,1),opacity .3s;
+}
+#page_top #fv .ttlArea .catch h1.nagomi-catch.is-anim span{
+  transform:translateY(0);
+  opacity:1;
+}
+#page_top #fv .ttlArea .catch h1.nagomi-catch span:nth-child(1){transition-delay:2s}
+#page_top #fv .ttlArea .catch h1.nagomi-catch span:nth-child(2){transition-delay:2.15s}
+#page_top #fv .ttlArea .catch .sub{
+  position:relative;
+  left:0;
+  bottom:auto;
+  margin-top:2.4rem;
+  font-size:1.8rem;
+}
+
+/* FV video slideshow (keep .video shell: tall right panel) */
+#page_top #fv .video.js_fv_videos{
+  position:relative;
+  display:inline-block;
+  height:100%;
+  aspect-ratio:3/4;
+  max-width:56%;
+  overflow:hidden;
+  vertical-align:top;
+  background:#dfeef5;
+}
+#page_top #fv .video.js_fv_videos video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 1s ease;
+  pointer-events:none;
+}
+#page_top #fv .video.js_fv_videos video.is-active{
+  opacity:1;
+  z-index:1;
+}
+
+/* Countdown badge — 中央に「あと / 14日 / 08:12」 */
+#page_top #fv .badge.m_box_badge{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-top:0;
+}
+#page_top #fv .badge.m_box_badge .hd.nagomi-badge-hd{
+  position:absolute;
+  top:-10%;
+  left:0;
+  z-index:5;
+  width:100%;
+  margin:0;
+  font-family:Outfit,YuGothic,'Yu Gothic',sans-serif;
+  font-size:1.5rem;
+  font-weight:700;
+  letter-spacing:.28em;
+  color:#3c9fc6;
+  text-align:center;
+}
+#page_top #fv .badge #countdown.nagomi-count.-remain{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.2rem;
+  position:relative;
+  z-index:5;
+  width:100%;
+  margin:0;
+  padding:.6rem .6rem 0;
+  text-align:center;
+  color:#333;
+}
+#page_top #fv .badge #countdown.nagomi-count.-remain .remain-label{
+  margin:0;
+  font-size:1.8rem;
+  font-weight:700;
+  letter-spacing:.2em;
+  color:#333;
+}
+#page_top #fv .badge #countdown.nagomi-count.-remain .remain{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  margin:0;
+  line-height:.9;
+}
+#page_top #fv .badge #countdown.nagomi-count.-remain .digit{
+  display:inline-block;
+  font-family:Outfit,sans-serif;
+  font-size:6.4rem;
+  font-weight:700;
+  font-style:normal;
+  line-height:.9;
+  letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;
+}
+#page_top #fv .badge #countdown.nagomi-count.-remain .unit{
+  margin-left:.05rem;
+  font-size:2rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  line-height:1;
+}
+#page_top #fv .badge #countdown.nagomi-count.-remain .remain-time{
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:.05rem;
+  margin:.1rem 0 0;
+  padding-top:.45rem;
+  border-top:.1rem solid rgba(51,51,51,.18);
+  font-family:Outfit,sans-serif;
+  font-variant-numeric:tabular-nums;
+  line-height:1;
+}
+#page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .t{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.2rem;
+  min-width:3.2rem;
+  font-size:2.2rem;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:#333;
+}
+#page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .t small{
+  font-family:YuGothic,'Yu Gothic',sans-serif;
+  font-size:1.05rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  color:#444;
+}
+#page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .colon{
+  align-self:flex-start;
+  margin:.15rem .05rem 0;
+  font-size:2rem;
+  font-weight:700;
+  color:#333;
+  line-height:1;
+}
+
+/* #link 内動画 */
+#page_top #link .img{
+  position:relative;
+  aspect-ratio:768/508;
+  background:#ddd;
+}
+#page_top #link .img video{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+@media screen and (max-width:767px){
+  #page_top #fv .ttlArea .catch h1.nagomi-catch span{
+    font-size:2.8rem;
+    letter-spacing:.12em;
+  }
+  #page_top #fv .ttlArea .catch .sub{
+    margin-top:1.2rem;
+    font-size:1.2rem;
+  }
+  #page_top #fv .video.js_fv_videos{
+    aspect-ratio:auto;
+    max-width:100%;
+    width:100%;
+    height:100%;
+  }
+}
+
+/* Intro image */
+#page_top #intro .row .imgArea img{
+  width:40.4rem;
+  height:auto;
+  object-fit:cover;
+}
+
+/* #link 手書き見出し枠（出会い等の画像の代わり） */
+#page_top #link h3.nagomi-link-hd{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:22rem;
+  height:auto;
+  min-height:6.4rem;
+  padding:1.2rem .8rem 1rem;
+}
+#page_top #link h3.nagomi-link-hd span{
+  display:block;
+  width:100%;
+  font-family:YakuHanMP,'游明朝','Yu Mincho','游明朝体',YuMincho,'ヒラギノ明朝 Pro W3','Hiragino Mincho Pro',serif,sans-serif;
+  font-weight:400;
+  font-size:2.4rem;
+  letter-spacing:.08em;
+  line-height:1.2;
+  text-align:center;
+  color:#333;
+  white-space:nowrap;
+}
+
+/* life/food/story 大見出し（出会い等のcatch画像の代わり） */
+#page_top #food .ttlArea h2.catch span.nagomi-sec-catch,
+#page_top #life .ttlArea h2.catch span.nagomi-sec-catch,
+#page_top #story .ttlArea h2.catch span.nagomi-sec-catch{
+  position:relative;
+  display:block;
+  width:33rem;
+  padding:1.2rem 1rem 2rem;
+  font-family:YakuHanMP,'游明朝','Yu Mincho','游明朝体',YuMincho,'ヒラギノ明朝 Pro W3','Hiragino Mincho Pro',serif,sans-serif;
+  font-weight:400;
+  font-size:5.6rem;
+  letter-spacing:.18em;
+  line-height:1.2;
+  color:#333;
+  z-index:5;
+}
+#page_top #life .ttlArea h2.catch span.nagomi-sec-catch{
+  width:auto;
+  max-width:100%;
+  font-size:4.2rem;
+  letter-spacing:.08em;
+  white-space:nowrap;
+}
+#page_top #life .ttlArea h2.catch em:empty,
+#page_top #link .life .type:empty{
+  display:none;
+}
+#page_top #food .ttlArea h2.catch span.nagomi-sec-catch:before,
+#page_top #life .ttlArea h2.catch span.nagomi-sec-catch:before,
+#page_top #story .ttlArea h2.catch span.nagomi-sec-catch:before{
+  content:'';
+  position:absolute;
+  margin:auto;
+  bottom:.8rem;
+  left:0;
+  z-index:-1;
+  width:100%;
+  height:2.8rem;
+  background:linear-gradient(90deg,#e8b9a7 0,#c0c0b4 50%,#97c7c1 100%);
+  mask-image:url(../img/top/cmn_ttl_bg_mask.webp);
+  mask-size:100% auto;
+  mask-repeat:no-repeat;
+  mask-position:center;
+  -webkit-mask-image:url(../img/top/cmn_ttl_bg_mask.webp);
+  -webkit-mask-size:100% auto;
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+}
+
+@media screen and (max-width:767px){
+  #page_top #link h3.nagomi-link-hd{
+    width:16rem;
+    min-height:5.2rem;
+    padding:1rem .6rem .8rem;
+  }
+  #page_top #link h3.nagomi-link-hd span{
+    font-size:1.7rem;
+    letter-spacing:.04em;
+  }
+  #page_top #food .ttlArea h2.catch span.nagomi-sec-catch,
+  #page_top #life .ttlArea h2.catch span.nagomi-sec-catch,
+  #page_top #story .ttlArea h2.catch span.nagomi-sec-catch{
+    width:18rem;
+    font-size:3.2rem;
+    padding:0 0 1.5rem;
+  }
+  #page_top #life .ttlArea h2.catch span.nagomi-sec-catch{
+    width:auto;
+    font-size:2.4rem;
+    letter-spacing:.04em;
+    white-space:nowrap;
+  }
+}
+
+/* Join row next to m_btn_main */
+.nagomi-join{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:1.2rem 1.6rem;
+  margin:1.6rem 0 3.2rem;
+}
+.nagomi-join .m_btn_main{margin:0}
+.nagomi-join .js_join_avatars,
+.js_join_avatars.nagomi-avatars{
+  display:flex;
+  align-items:center;
+  min-height:3.6rem;
+}
+.js_join_avatars .av{
+  width:3.6rem;
+  height:3.6rem;
+  border-radius:50%;
+  border:.2rem solid #333;
+  color:#fff;
+  font-size:1.1rem;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-left:-.8rem;
+  position:relative;
+}
+.js_join_avatars .av:first-child{margin-left:0}
+.js_join_avatars .count{
+  margin-left:1rem;
+  font-size:1.3rem;
+  color:#555;
+  white-space:nowrap;
+}
+.m_btn_main a.js_join_btn.is-joined{
+  background:#3c9fc6;
+  color:#fff;
+}
+
+/* Story section photos as object-fit cover */
+#page_top #life .visual img,
+#page_top #food .visual img,
+#page_top #story .visual img,
+#page_top #life .person .img img,
+#page_top #food .person .img img,
+#page_top #story .person .img img,
+#page_top #life .creator .face img,
+#page_top #food .creator .face img,
+#page_top #story .creator .face img,
+#page_top #yoppie .person img,
+#page_top #program .list img,
+#page_top #campaign .presentArea img{
+  object-fit:cover;
+}
+
+/* Intro heading — longer copy */
+#page_top #intro .row .txtArea h2{
+  font-size:2.4rem;
+  letter-spacing:.08em;
+  line-height:1.8;
+}
+
+/* Hide original Hyogo logo mark ("兵庫の日常へ 旅しよう。") */
+#page_top #food .ttlArea .visual:before,
+#page_top #life .ttlArea .visual:before,
+#page_top #story .ttlArea .visual:before{
+  display:none !important;
+  content:none !important;
+}
+#page_top #life .ttlArea .visual .media{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+#page_top #life .ttlArea .visual .media video{
+  position:absolute;
+  top:0;
+  left:0;
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 1s ease;
+  pointer-events:none;
+}
+#page_top #life .ttlArea .visual .media video.is-active{
+  opacity:1;
+  z-index:1;
+}
+#page_top #life .contentsArea .imgGroup .img02 video{
+  display:block;
+  width:100%;
+  height:auto;
+  aspect-ratio:930/620;
+  object-fit:cover;
+}
+
+/* Budget progress bar inside campaign infoArea */
+#page_top #campaign .nagomi-bar{
+  margin-top:1rem;
+  height:1.6rem;
+  border-radius:10rem;
+  border:.2rem solid #333;
+  background:#fff;
+  overflow:hidden;
+}
+#page_top #campaign .nagomi-bar-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#d4ebd0,#fdefcd);
+  transition:width .4s ease;
+}
+#page_top #campaign .presentArea .name small{
+  display:block;
+  margin-top:.4rem;
+  font-size:1.2rem;
+  font-weight:400;
+  color:#666;
+}
+
+/* Pay rows inside campaign */
+#page_top #campaign .pay-list{
+  display:flex;
+  flex-direction:column;
+  gap:1.2rem;
+  margin:2.4rem 0;
+}
+#page_top #campaign .pay-row{
+  display:flex;
+  align-items:center;
+  gap:1.2rem;
+  flex-wrap:wrap;
+  background:#fff;
+  border:.2rem solid #333;
+  border-radius:1.2rem;
+  padding:1.2rem 1.6rem;
+}
+#page_top #campaign .pay-row .av{
+  width:3.6rem;
+  height:3.6rem;
+  border-radius:50%;
+  border:.2rem solid #333;
+  color:#fff;
+  font-size:1.1rem;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+#page_top #campaign .pay-row .name{
+  font-weight:700;
+  font-size:1.5rem;
+  min-width:11rem;
+  letter-spacing:.06em;
+}
+#page_top #campaign .pay-row .checks{
+  display:flex;
+  gap:1rem;
+  flex-wrap:wrap;
+  margin-left:auto;
+}
+#page_top #campaign .pay-check{
+  display:inline-flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.8rem 1.4rem;
+  border:.2rem solid #333;
+  border-radius:10rem;
+  background:#f5f5f5;
+  font-size:1.3rem;
+  font-weight:700;
+  cursor:pointer;
+  width:auto;
+}
+#page_top #campaign .pay-check input{
+  width:1.6rem;
+  height:1.6rem;
+  border:.2rem solid #333;
+  border-radius:.3rem;
+  appearance:auto;
+  -webkit-appearance:checkbox;
+  background:#fff;
+  flex-shrink:0;
+}
+#page_top #campaign .pay-exempt{
+  display:inline-flex;
+  align-items:center;
+  padding:.8rem 1.4rem;
+  border:.2rem solid #333;
+  border-radius:10rem;
+  background:#deeef5;
+  font-size:1.3rem;
+  font-weight:700;
+}
+
+/* List / pack / board inside campaign wraps */
+#page_top #campaign .js_list{
+  display:flex;
+  flex-direction:column;
+  gap:.8rem;
+  margin-bottom:.8rem;
+}
+#page_top #campaign .list-row{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  padding:.8rem 1rem;
+  border-radius:.8rem;
+  background:#f5f5f5;
+}
+#page_top #campaign .list-row.is-done{
+  opacity:.55;
+  text-decoration:line-through;
+}
+#page_top #campaign .list-row input[type=checkbox]{
+  width:1.8rem;
+  height:1.8rem;
+  border:.2rem solid #333;
+  border-radius:.3rem;
+  appearance:auto;
+  -webkit-appearance:checkbox;
+  background:#fff;
+  flex-shrink:0;
+}
+#page_top #campaign .list-row .txt{
+  flex:1;
+  font-size:1.4rem;
+  letter-spacing:.04em;
+}
+#page_top #campaign .list-row .by{
+  font-size:1.1rem;
+  color:#888;
+  font-style:normal;
+}
+#page_top #campaign .list-row .js_del{
+  width:auto;
+  padding:.4rem .8rem;
+  border:.1rem solid #333;
+  border-radius:10rem;
+  background:#fff;
+  font-size:1.1rem;
+  font-weight:700;
+}
+#page_top #campaign .add-row{
+  display:flex;
+  gap:.8rem;
+  margin-top:.8rem;
+}
+#page_top #campaign .add-row input[type=text]{
+  flex:1;
+  border:.2rem solid #333;
+  border-radius:10rem;
+  padding:1rem 1.6rem;
+  background:#fff;
+  width:auto;
+}
+#page_top #campaign .add-row button{
+  width:auto;
+  min-width:8rem;
+  border:.2rem solid #333;
+  border-radius:10rem;
+  background:#deeef5;
+  font-weight:700;
+  padding:1rem 1.6rem;
+}
+#page_top #campaign .pack-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1.6rem;
+}
+#page_top #campaign .pack-card{
+  background:#f5f5f5;
+  border:.2rem solid #333;
+  border-radius:1.2rem;
+  padding:1.6rem;
+}
+#page_top #campaign .pack-card h4{
+  font-size:1.4rem;
+  font-weight:700;
+  margin-bottom:1rem;
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+}
+#page_top #campaign .pack-card h4 .av{
+  width:2.8rem;
+  height:2.8rem;
+  border-radius:50%;
+  border:.15rem solid #333;
+  color:#fff;
+  font-size:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#page_top #campaign .board-posts{
+  display:flex;
+  flex-direction:column;
+  gap:1.2rem;
+  margin-bottom:1.6rem;
+}
+#page_top #campaign .board-post{
+  background:#f5f5f5;
+  border:.2rem solid #333;
+  border-radius:1.2rem;
+  padding:1.4rem 1.6rem;
+}
+#page_top #campaign .board-post .meta{
+  display:flex;
+  justify-content:space-between;
+  font-size:1.2rem;
+  color:#666;
+  margin-bottom:.6rem;
+}
+#page_top #campaign .board-post .body{
+  font-size:1.4rem;
+  line-height:1.7;
+  letter-spacing:.04em;
+}
+#page_top #campaign .board-compose textarea{
+  border:.2rem solid #333;
+  border-radius:1.2rem;
+  padding:1.2rem 1.6rem;
+  background:#fff;
+  min-height:8rem;
+  margin-bottom:1rem;
+  width:100%;
+}
+#page_top #campaign .board-compose button{
+  width:auto;
+  min-width:12rem;
+  border:.2rem solid #333;
+  border-radius:10rem;
+  background:#deeef5;
+  font-weight:700;
+  padding:1.2rem 2rem;
+}
+#page_top #campaign .infoArea .entry{
+  margin-bottom:2.4rem;
+}
+#page_top #campaign .infoArea .entry dt{
+  margin-bottom:1.2rem;
+}
+
+/* Footer */
+#l_footer .nagomi-footer-en{
+  font-family:Outfit,sans-serif;
+  font-style:italic;
+  font-size:2rem;
+  letter-spacing:.12em;
+  margin-bottom:1.2rem;
+  font-weight:400;
+}
+#l_footer h2{
+  font-family:YakuHanMP,'游明朝','Yu Mincho',serif,sans-serif;
+  font-weight:400;
+  letter-spacing:.18em;
+}
+
+/* Name modal */
+#name_modal{
+  position:fixed;
+  inset:0;
+  z-index:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(51,51,51,.55);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .3s,visibility .3s;
+  padding:2rem;
+}
+#name_modal.is-show{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+#name_modal .inner{
+  width:100%;
+  max-width:56rem;
+  background:#fff;
+  border:.3rem solid #333;
+  border-radius:2rem;
+  padding:3.2rem 2.8rem;
+  text-align:center;
+}
+#name_modal .inner h2{
+  font-family:YakuHanMP,'游明朝','Yu Mincho',serif,sans-serif;
+  font-weight:400;
+  font-size:2.4rem;
+  letter-spacing:.15em;
+  margin-bottom:2.4rem;
+}
+#name_modal .name-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1rem;
+}
+#name_modal .js_name_btn{
+  width:100%;
+  border:.2rem solid #333;
+  border-radius:10rem;
+  background:#deeef5;
+  font-weight:700;
+  font-size:1.4rem;
+  padding:1.4rem 1.2rem;
+  letter-spacing:.06em;
+  transition:background .3s,color .3s;
+}
+#name_modal .js_name_btn:hover{
+  background:#3c9fc6;
+  color:#fff;
+  opacity:1;
+}
+#name_modal .js_name_btn.-guest{
+  grid-column:1 / -1;
+  background:#fdefcd;
+  margin-top:.4rem;
+}
+
+/* Toast */
+#toast{
+  position:fixed;
+  left:50%;
+  bottom:3rem;
+  transform:translateX(-50%) translateY(2rem);
+  z-index:700;
+  background:#333;
+  color:#fff;
+  border-radius:10rem;
+  padding:1.2rem 2.4rem;
+  font-size:1.4rem;
+  letter-spacing:.08em;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s,transform .3s;
+  white-space:nowrap;
+}
+#toast.is-show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* Hidden stub for original app.js modal */
+#l_modal.js_modal.-stub{
+  display:none!important;
+}
+
+/* SP */
+@media screen and (max-width:767px){
+  #page_top #fv .badge.m_box_badge .hd.nagomi-badge-hd{
+    font-size:1.15rem;
+    top:-8%;
+    letter-spacing:.22em;
+  }
+  #page_top #fv .badge #countdown.nagomi-count.-remain{
+    padding-top:.4rem;
+    gap:.15rem;
+  }
+  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-label{font-size:1.4rem}
+  #page_top #fv .badge #countdown.nagomi-count.-remain .digit{font-size:4.8rem}
+  #page_top #fv .badge #countdown.nagomi-count.-remain .unit{font-size:1.5rem}
+  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .t{
+    min-width:2.6rem;
+    font-size:1.7rem;
+  }
+  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .t small{font-size:.85rem}
+  #page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .colon{
+    font-size:1.5rem;
+    margin-top:.1rem;
+  }
+
+  #page_top #intro .row .imgArea img{
+    width:27rem;
+  }
+
+  #page_top #campaign .pay-row .checks{
+    margin-left:0;
+    width:100%;
+  }
+  #page_top #campaign .pack-grid{grid-template-columns:1fr}
+
+  #name_modal .inner{padding:2.4rem 1.6rem}
+  #name_modal .name-grid{grid-template-columns:1fr}
+}
