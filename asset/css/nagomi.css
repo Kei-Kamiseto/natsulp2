@@ -369,6 +369,38 @@
   line-height:1.8;
 }
 
+/* Access button: Janohire logo */
+#page_top #message .btn a img{
+  width:auto;
+  max-width:36rem;
+  height:auto;
+  margin:0 auto;
+  display:block;
+}
+
+/* Program schedule image (same footprint as previous board) */
+#page_top #program .nagomi-schedule{
+  max-width:96rem;
+  width:100%;
+  margin:0 auto;
+  border:none;
+  background:transparent;
+  overflow:hidden;
+}
+#page_top #program .nagomi-schedule img{
+  display:block;
+  width:100%;
+  max-width:96rem;
+  height:auto;
+  margin:0 auto;
+}
+@media screen and (max-width:767px){
+  #page_top #program .nagomi-schedule{
+    max-width:100%;
+    padding:0 1rem;
+  }
+}
+
 /* Hide original Hyogo logo mark ("兵庫の日常へ 旅しよう。") */
 #page_top #food .ttlArea .visual:before,
 #page_top #life .ttlArea .visual:before,
