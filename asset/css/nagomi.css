@@ -303,7 +303,13 @@
 .js_join_avatars.nagomi-avatars{
   display:flex;
   align-items:center;
-  min-height:3.6rem;
+  min-height:0;
+  margin-top:1.2rem;
+}
+.js_join_avatars[hidden]{
+  display:none !important;
+  margin:0 !important;
+  min-height:0 !important;
 }
 .js_join_avatars .av{
   width:3.6rem;

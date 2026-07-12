@@ -48,12 +48,12 @@
 
   var DEFAULTS = {
     events: {
-      sup: ['和みママ', 'すみちゃん', 'けいちゃん'],
-      sauna: ['アサちゃん'],
-      fishing: ['けいくん'],
-      bbq: ALL11.slice(),
-      fireworks: ALL11.slice(),
-      cards: ALL11.slice()
+      sup: [],
+      sauna: [],
+      fishing: [],
+      bbq: [],
+      fireworks: [],
+      cards: []
     },
     shared: [],
     konan: makeShopDefaults(B.DEFAULT_KONAN, 'konan'),
@@ -221,14 +221,33 @@
   }
 
   /* ---------- Events (join) ---------- */
+  function emptyEvents() {
+    return {
+      sup: [],
+      sauna: [],
+      fishing: [],
+      bbq: [],
+      fireworks: [],
+      cards: []
+    };
+  }
+
   function renderEvents() {
-    Object.keys(state.events || {}).forEach(function (key) {
+    Object.keys(state.events || emptyEvents()).forEach(function (key) {
       var list = state.events[key] || [];
       var box = document.querySelector('.js_join_avatars[data-key="' + key + '"]');
       var btn = document.querySelector('.js_join_btn[data-key="' + key + '"]');
       if (box) {
-        box.innerHTML = list.map(avatarHTML).join('') +
-          '<span class="count">' + list.length + '名</span>';
+        if (!list.length) {
+          box.innerHTML = '';
+          box.hidden = true;
+          box.setAttribute('aria-hidden', 'true');
+        } else {
+          box.hidden = false;
+          box.setAttribute('aria-hidden', 'false');
+          box.innerHTML = list.map(avatarHTML).join('') +
+            '<span class="count">' + list.length + '名</span>';
+        }
       }
       if (btn) {
         var joined = me && list.indexOf(me) !== -1;
@@ -951,11 +970,12 @@
   }
 
   function migrateEvents(events) {
-    var out = events && typeof events === 'object' ? events : DEFAULTS.events;
-    Object.keys(out).forEach(function (k) {
-      out[k] = migrateNameInList(out[k]);
+    var base = emptyEvents();
+    var out = events && typeof events === 'object' ? events : {};
+    Object.keys(base).forEach(function (k) {
+      base[k] = migrateNameInList(out[k] || []);
     });
-    return out;
+    return base;
   }
 
   function migratePack(pack) {
@@ -988,7 +1008,18 @@
 
   /* ---------- Load & bind ---------- */
   async function loadAll() {
-    state.events = migrateEvents(await store.get('events', DEFAULTS.events));
+    // 旧デフォルト参加者シードを一度クリア（最初はアイコンなし）
+    var eventsSeedVersion = 0;
+    try {
+      eventsSeedVersion = Number(localStorage.getItem('nagomi_events_seed_v') || 0);
+    } catch (e) { /* ignore */ }
+    if (eventsSeedVersion < 2) {
+      state.events = emptyEvents();
+      try { localStorage.setItem('nagomi_events_seed_v', '2'); } catch (e) { /* ignore */ }
+    } else {
+      state.events = migrateEvents(await store.get('events', DEFAULTS.events));
+    }
+
     state.shared = await store.get('shared', DEFAULTS.shared);
     state.konan = ensureKonanDefaults(await store.get('konan', DEFAULTS.konan));
     state.ropia = normalizeShopList(await store.get('ropia', DEFAULTS.ropia), 'ropia');
