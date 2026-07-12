@@ -272,57 +272,59 @@
     );
   }
 
-  function renderWallet() {
-    var el = document.getElementById('budget_wallet');
-    if (!el) return;
-    var sum = B.computeWalletSummary(ensureBudgetReady());
-    el.innerHTML =
-      walletCardHTML('回収予定総額', B.formatYen(sum.expectedDepositTotal)) +
-      walletCardHTML('入金済み総額', B.formatYen(sum.paidDepositTotal)) +
-      walletCardHTML('未回収総額', B.formatYen(sum.unpaidTotal)) +
-      walletCardHTML('支出済み総額', B.formatYen(sum.expenseTotal)) +
-      walletCardHTML('現在の手元残高', B.formatYen(sum.cashBalance), 'is-balance') +
-      walletCardHTML('返金予定総額', B.formatYen(sum.refundTotal), 'is-refund') +
-      walletCardHTML('追加徴収予定総額', B.formatYen(sum.additionalCollectionTotal), 'is-collect') +
-      walletCardHTML('精算後差額', B.formatYen(sum.settlementDifference), sum.settlementDifference === 0 ? 'is-ok' : 'is-warn') +
-      '<p class="nagomi-wallet-note">入金 ' + sum.paidCount + ' / ' + sum.totalParticipants + ' 人</p>' +
-      (sum.settlementDifference !== 0
-        ? '<p class="nagomi-settle-warn">精算金額に' + escapeHTML(B.formatYen(Math.abs(sum.settlementDifference))) +
-          'の差額があります。入金額または支出の負担者設定を確認してください。</p>'
-        : '');
-  }
-
-  function renderDeposits() {
-    var el = document.getElementById('budget_deposits');
+  function renderBudget() {
+    var el = document.getElementById('budget_people');
+    var hint = document.getElementById('budget_hint');
     if (!el) return;
     var budget = ensureBudgetReady();
+    var sum = B.computeWalletSummary(budget);
     var admin = isAdmin();
+
+    if (hint) {
+      hint.textContent =
+        '入金済み ' + sum.paidCount + ' / 11人 ／ みんなの入金合計 ' + B.formatYen(sum.paidDepositTotal);
+    }
+
     el.innerHTML = B.PARTICIPANTS.map(function (p) {
-      var d = budget.deposits[p.id] || {};
-      var status = B.depositStatusFromPaid(d.paidDeposit, B.INITIAL_DEPOSIT);
-      var statusLabel = B.DEPOSIT_STATUS_LABELS[status] || status;
-      var paid = Math.floor(Number(d.paidDeposit) || 0);
-      var controls = admin
+      var row = sum.people[p.id];
+      var b = row.buckets || { cottage: 0, food: 0, rental: 0, car: 0, other: 0 };
+      var paid = row.paidDeposit;
+      var remain = row.settlementBalance;
+      var remainClass = remain > 0 ? 'is-plus' : (remain < 0 ? 'is-minus' : 'is-zero');
+      var remainLabel = remain > 0
+        ? '残金（戻り） ' + B.formatYen(remain)
+        : (remain < 0
+          ? '残金（不足） ' + B.formatYen(remain)
+          : '残金 0円');
+
+      var depositControl = admin
         ? (
-          '<div class="nagomi-deposit-edit">' +
-            '<label>入金額 <input type="number" class="js_deposit_amount" data-id="' + p.id +
-              '" min="0" step="1" value="' + paid + '" inputmode="numeric"></label>' +
-            '<button type="button" class="nagomi-btn-primary js_deposit_save" data-id="' + p.id + '">保存</button>' +
-          '</div>'
+          '<label class="nagomi-paid-toggle">' +
+            '<input type="checkbox" class="js_paid_toggle" data-id="' + p.id + '"' +
+              (paid >= B.INITIAL_DEPOSIT ? ' checked' : '') + '>' +
+            ' 20,000円 入金済みにする' +
+          '</label>'
         )
-        : '';
+        : (
+          '<p class="nagomi-paid-state">' +
+            (paid >= B.INITIAL_DEPOSIT ? '入金済み' : (paid > 0 ? '一部入金 ' + B.formatYen(paid) : 'まだ未入金')) +
+          '</p>'
+        );
+
       return (
-        '<div class="nagomi-deposit-card" data-id="' + p.id + '">' +
-          '<div class="hd">' + avatarHTML(p.name) + '<strong>' + escapeHTML(p.name) + '</strong></div>' +
-          '<dl>' +
-            '<div><dt>回収予定</dt><dd>' + B.formatYen(B.INITIAL_DEPOSIT) + '</dd></div>' +
-            '<div><dt>入金済み</dt><dd>' + B.formatYen(paid) + '</dd></div>' +
-            '<div><dt>状態</dt><dd><span class="nagomi-status -' + status + '">' + escapeHTML(statusLabel) + '</span></dd></div>' +
-            '<div><dt>入金日</dt><dd>' + escapeHTML(d.paidAt || '—') + '</dd></div>' +
-            '<div><dt>更新者</dt><dd>' + escapeHTML(d.updatedBy || '—') + '</dd></div>' +
-          '</dl>' +
-          controls +
-        '</div>'
+        '<article class="nagomi-simple-card" data-id="' + p.id + '">' +
+          '<header>' + avatarHTML(p.name) + '<h3>' + escapeHTML(p.name) + '</h3></header>' +
+          '<p class="nagomi-deposit-line"><span>入金</span><strong>' + B.formatYen(paid) + '</strong></p>' +
+          '<ul class="nagomi-cost-lines">' +
+            '<li><span>コテージ費</span><em>' + B.formatYen(b.cottage) + '</em></li>' +
+            '<li><span>食材費</span><em>' + B.formatYen(b.food) + '</em></li>' +
+            '<li><span>レンタル費</span><em>' + B.formatYen(b.rental) + '</em></li>' +
+            '<li><span>車代</span><em>' + B.formatYen(b.car) + '</em></li>' +
+            (b.other ? '<li><span>その他</span><em>' + B.formatYen(b.other) + '</em></li>' : '') +
+          '</ul>' +
+          '<p class="nagomi-remain ' + remainClass + '">' + remainLabel + '</p>' +
+          depositControl +
+        '</article>'
       );
     }).join('');
   }
@@ -349,192 +351,6 @@
 
   function paymentSourceLabel(src) {
     return src === 'personal-advance' ? '個人立替' : '共同財布から支払い';
-  }
-
-  function renderExpenses() {
-    var el = document.getElementById('budget_expenses');
-    if (!el) return;
-    var budget = ensureBudgetReady();
-    var admin = isAdmin();
-    var current = getMe();
-    var list = (budget.expenses || []).filter(function (e) {
-      if (showDeletedExpenses) return true;
-      return !e.deletedAt && e.paymentStatus !== 'cancelled';
-    });
-
-    if (!list.length) {
-      el.innerHTML = '<p class="nagomi-empty">支出はまだありません。</p>';
-      return;
-    }
-
-    el.innerHTML = list.map(function (e) {
-      var deleted = !!e.deletedAt;
-      var allocLabel = B.ALLOCATION_LABELS[e.allocationType] || e.allocationType;
-      var catLabel = B.CATEGORY_LABELS[e.category] || e.category;
-      var purchaser = e.purchaserId ? participantName(e.purchaserId) : '—';
-      var ids = e.participantIds && e.participantIds.length
-        ? e.participantIds
-        : B.resolveParticipantIds(e.allocationType, e.participantIds);
-      var perPerson = '';
-      try {
-        var preview = B.previewAllocation(e.amount, e.allocationType, ids, e.id);
-        var parts = Object.keys(preview.counts).map(function (amt) {
-          return preview.counts[amt] + '人 × ' + B.formatYen(Number(amt));
-        });
-        perPerson = parts.join(' / ');
-      } catch (err) {
-        perPerson = '—';
-      }
-
-      var canEdit = admin || (e.createdBy === current && !e.isInitialExpense);
-      var canDelete = admin;
-      var actions = '';
-      if (!deleted) {
-        if (canEdit) {
-          actions += '<button type="button" class="nagomi-btn-ghost js_expense_edit" data-id="' + e.id + '">編集</button>';
-        }
-        if (canDelete) {
-          actions += '<button type="button" class="nagomi-btn-ghost js_expense_soft_delete" data-id="' + e.id + '">削除</button>';
-        }
-      } else if (admin) {
-        actions += '<button type="button" class="nagomi-btn-primary js_expense_restore" data-id="' + e.id + '">復元</button>';
-      }
-
-      return (
-        '<div class="nagomi-expense-card' + (deleted ? ' is-deleted' : '') + '" data-id="' + e.id + '">' +
-          '<div class="hd"><strong>' + escapeHTML(e.title) + '</strong>' +
-            '<span class="amt">' + B.formatYen(e.amount) + '</span></div>' +
-          '<dl>' +
-            '<div><dt>カテゴリー</dt><dd>' + escapeHTML(catLabel) + '</dd></div>' +
-            '<div><dt>購入者</dt><dd>' + escapeHTML(purchaser) + '</dd></div>' +
-            '<div><dt>支払方法</dt><dd>' + escapeHTML(paymentSourceLabel(e.paymentSource)) + '</dd></div>' +
-            '<div><dt>負担グループ</dt><dd>' + escapeHTML(allocLabel) + '（' + ids.length + '人）</dd></div>' +
-            '<div><dt>1人あたり</dt><dd>' + escapeHTML(perPerson) + '</dd></div>' +
-            '<div><dt>レシート</dt><dd>' +
-              (e.receiptUrl
-                ? '<a href="' + escapeHTML(e.receiptUrl) + '" target="_blank" rel="noopener">開く</a>'
-                : '—') +
-            '</dd></div>' +
-            '<div><dt>登録</dt><dd>' + escapeHTML(e.createdBy || '—') + ' / ' + escapeHTML(e.createdAt || '—') + '</dd></div>' +
-            (e.memo ? '<div><dt>メモ</dt><dd>' + escapeHTML(e.memo) + '</dd></div>' : '') +
-            (deleted ? '<div><dt>削除</dt><dd>' + escapeHTML(e.deletedBy || '') + ' / ' + escapeHTML(e.deletedAt || '') + '</dd></div>' : '') +
-          '</dl>' +
-          (actions ? '<div class="nagomi-expense-actions">' + actions + '</div>' : '') +
-        '</div>'
-      );
-    }).join('');
-  }
-
-  function renderSettlement() {
-    var sumEl = document.getElementById('budget_settlement_summary');
-    var el = document.getElementById('budget_settlement');
-    if (!el) return;
-    var budget = ensureBudgetReady();
-    var sum = B.computeWalletSummary(budget);
-    var admin = isAdmin();
-
-    if (sumEl) {
-      sumEl.innerHTML =
-        walletCardHTML('回収予定総額', B.formatYen(sum.expectedDepositTotal)) +
-        walletCardHTML('入金済み総額', B.formatYen(sum.paidDepositTotal)) +
-        walletCardHTML('未回収総額', B.formatYen(sum.unpaidTotal)) +
-        walletCardHTML('支出総額', B.formatYen(sum.expenseTotal)) +
-        walletCardHTML('現在手元残高', B.formatYen(sum.cashBalance), 'is-balance') +
-        walletCardHTML('返金予定総額', B.formatYen(sum.refundTotal), 'is-refund') +
-        walletCardHTML('追加徴収予定総額', B.formatYen(sum.additionalCollectionTotal), 'is-collect') +
-        walletCardHTML('精算後差額', B.formatYen(sum.settlementDifference), sum.settlementDifference === 0 ? 'is-ok' : 'is-warn') +
-        (sum.settlementDifference !== 0
-          ? '<p class="nagomi-settle-warn">精算金額に' + escapeHTML(B.formatYen(Math.abs(sum.settlementDifference))) +
-            'の差額があります。入金額または支出の負担者設定を確認してください。</p>'
-          : '');
-    }
-
-    el.innerHTML = B.PARTICIPANTS.map(function (p) {
-      var row = sum.people[p.id];
-      var status = row.settlementStatus || 'unsettled';
-      var statusLabel = B.SETTLEMENT_STATUS_LABELS[status] || status;
-      var resultHTML = '';
-      if (row.refundAmount > 0) {
-        resultHTML = '<span class="nagomi-settle-refund">' + B.formatYen(row.refundAmount) + ' 返金予定</span>';
-      } else if (row.additionalAmount > 0) {
-        resultHTML = '<span class="nagomi-settle-collect">' + B.formatYen(row.additionalAmount) + ' 追加徴収</span>';
-      } else {
-        resultHTML = '<span class="nagomi-settle-even">精算なし</span>';
-      }
-
-      var statusControl = admin
-        ? (
-          '<label class="nagomi-settle-status">精算状態 ' +
-            '<select class="js_settle_status" data-id="' + p.id + '">' +
-              Object.keys(B.SETTLEMENT_STATUS_LABELS).map(function (k) {
-                return '<option value="' + k + '"' + (k === status ? ' selected' : '') + '>' +
-                  escapeHTML(B.SETTLEMENT_STATUS_LABELS[k]) + '</option>';
-              }).join('') +
-            '</select>' +
-          '</label>'
-        )
-        : '<p>状態：' + escapeHTML(statusLabel) + '</p>';
-
-      var breakdown = (row.breakdown || []).map(function (b) {
-        return (
-          '<li>' +
-            '<strong>' + escapeHTML(b.title) + '</strong>' +
-            '<span>全体' + B.formatYen(b.amount) + ' / ' + escapeHTML(b.allocationLabel) +
-              '（' + b.participantCount + '人） / 本人' + B.formatYen(b.personalAmount) + '</span>' +
-          '</li>'
-        );
-      }).join('');
-
-      return (
-        '<div class="nagomi-settle-card" data-id="' + p.id + '">' +
-          '<button type="button" class="nagomi-settle-toggle js_settle_toggle" aria-expanded="false">' +
-            '<span class="hd">' + avatarHTML(p.name) + '<strong>' + escapeHTML(p.name) + '</strong></span>' +
-            '<span class="result">' + resultHTML + '</span>' +
-          '</button>' +
-          '<dl class="nagomi-settle-meta">' +
-            '<div><dt>預かり金</dt><dd>' + B.formatYen(row.paidDeposit) + '</dd></div>' +
-            '<div><dt>実負担額</dt><dd>' + B.formatYen(row.actualBurden) + '</dd></div>' +
-            '<div><dt>返金予定</dt><dd>' + B.formatYen(row.refundAmount) + '</dd></div>' +
-            '<div><dt>追加徴収</dt><dd>' + B.formatYen(row.additionalAmount) + '</dd></div>' +
-          '</dl>' +
-          statusControl +
-          '<div class="nagomi-settle-breakdown" hidden>' +
-            '<p class="ttl">' + escapeHTML(p.name) + 'の負担内訳</p>' +
-            '<ul>' + (breakdown || '<li>負担なし</li>') + '</ul>' +
-            '<p class="total">合計 ' + B.formatYen(row.actualBurden) + '</p>' +
-          '</div>' +
-        '</div>'
-      );
-    }).join('');
-  }
-
-  function renderBudget() {
-    renderWallet();
-    renderDeposits();
-    renderExpenses();
-    renderSettlement();
-  }
-
-  async function setSettlementStatus(participantId, status) {
-    if (!isAdmin()) {
-      alert('精算状態の変更は管理者（' + ADMIN_NAME + '）のみ可能です。');
-      renderSettlement();
-      return;
-    }
-    requireMe(async function () {
-      var budget = ensureBudgetReady();
-      if (!budget.settlements[participantId]) {
-        budget.settlements[participantId] = {
-          settlementStatus: 'unsettled',
-          settledAt: '',
-          settledBy: ''
-        };
-      }
-      budget.settlements[participantId].settlementStatus = status;
-      budget.settlements[participantId].settledAt = nowISO();
-      budget.settlements[participantId].settledBy = getMe();
-      await saveBudget();
-    });
   }
 
   /* ---------- Expense modal ---------- */
@@ -1125,27 +941,7 @@
     if (!me) openNameModal(null);
   }
 
-  function switchBudgetTab(tabName) {
-    document.querySelectorAll('.nagomi-tab').forEach(function (btn) {
-      var on = btn.getAttribute('data-tab') === tabName;
-      btn.classList.toggle('is-active', on);
-      btn.setAttribute('aria-selected', on ? 'true' : 'false');
-    });
-    document.querySelectorAll('.nagomi-tab-panel').forEach(function (panel) {
-      var on = panel.getAttribute('data-panel') === tabName;
-      panel.classList.toggle('is-active', on);
-      if (on) panel.removeAttribute('hidden');
-      else panel.setAttribute('hidden', '');
-    });
-  }
-
   function bindBudgetUI() {
-    document.querySelectorAll('.nagomi-tab').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        switchBudgetTab(btn.getAttribute('data-tab'));
-      });
-    });
-
     document.querySelectorAll('.js_expense_open').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.preventDefault();
@@ -1167,14 +963,6 @@
       form.addEventListener('change', updateExpensePreview);
     }
 
-    var showDel = document.getElementById('show_deleted_expenses');
-    if (showDel) {
-      showDel.addEventListener('change', function () {
-        showDeletedExpenses = !!showDel.checked;
-        renderExpenses();
-      });
-    }
-
     var expenseModal = document.getElementById('expense_modal');
     if (expenseModal) {
       expenseModal.addEventListener('click', function (e) {
@@ -1183,52 +971,17 @@
     }
 
     document.addEventListener('click', function (e) {
-      var editBtn = e.target.closest('.js_expense_edit');
-      if (editBtn) {
-        var id = editBtn.getAttribute('data-id');
-        var row = (ensureBudgetReady().expenses || []).find(function (x) { return x.id === id; });
-        if (row) openExpenseModal(row, null);
-        return;
-      }
-      var delBtn = e.target.closest('.js_expense_soft_delete');
-      if (delBtn) {
-        softDeleteExpense(delBtn.getAttribute('data-id'));
-        return;
-      }
-      var restBtn = e.target.closest('.js_expense_restore');
-      if (restBtn) {
-        restoreExpense(restBtn.getAttribute('data-id'));
-        return;
-      }
-      var depSave = e.target.closest('.js_deposit_save');
-      if (depSave) {
-        var pid = depSave.getAttribute('data-id');
-        var input = document.querySelector('.js_deposit_amount[data-id="' + pid + '"]');
-        saveDeposit(pid, input ? input.value : 0);
-        return;
-      }
-      var shopExp = e.target.closest('.js_shop_expense');
+      var shopExp = e.target.closest('.js_shop_expense') || e.target.closest('.js_shop_to_expense');
       if (shopExp) {
         registerShopExpense(shopExp.getAttribute('data-store'), shopExp.getAttribute('data-id'));
-        return;
-      }
-      var settleToggle = e.target.closest('.js_settle_toggle');
-      if (settleToggle) {
-        var card = settleToggle.closest('.nagomi-settle-card');
-        if (!card) return;
-        var box = card.querySelector('.nagomi-settle-breakdown');
-        if (!box) return;
-        var open = box.hasAttribute('hidden');
-        if (open) box.removeAttribute('hidden');
-        else box.setAttribute('hidden', '');
-        settleToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-        return;
       }
     });
 
     document.addEventListener('change', function (e) {
-      if (e.target.classList.contains('js_settle_status')) {
-        setSettlementStatus(e.target.getAttribute('data-id'), e.target.value);
+      if (e.target.classList.contains('js_paid_toggle')) {
+        var id = e.target.getAttribute('data-id');
+        saveDeposit(id, e.target.checked ? B.INITIAL_DEPOSIT : 0);
+        return;
       }
       if (e.target.classList.contains('js_shop_amount')) {
         updateShopAmount(

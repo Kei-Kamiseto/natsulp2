@@ -33,11 +33,11 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=budget3">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=budget4">
 
   <script src="./asset/js/vender.js"></script>
-  <script src="./asset/js/nagomi-budget.js?v=budget3"></script>
-  <script defer src="./asset/js/app.js?v=budget3"></script>
+  <script src="./asset/js/nagomi-budget.js?v=budget4"></script>
+  <script defer src="./asset/js/app.js?v=budget4"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
@@ -626,7 +626,7 @@
               </h2>
 
               <p class="lead">
-                11人×20,000円を共同財布へ。支出は負担グループごとにきちんと分けて精算。
+                みんな先に20,000円ずつ入れて、使った分を引いた「残金」をここで見ます。
               </p>
               <p class="nagomi-special-note">スペシャルメンバー：はなちゃん🐕（費用負担なし）</p>
             </div>
@@ -634,47 +634,51 @@
             <div class="presentArea js_anim_scroll -fadein">
               <div class="present01">
                 <img loading="lazy" src="./asset/img/nagomi/cottage.jpg" alt="回収予定" width="510" height="330">
-                <p class="name">回収予定 22万<br><small>11人 × 20,000円</small></p>
+                <p class="name">ひとり 20,000円<br><small>11人分を共同財布へ</small></p>
               </div>
 
               <div class="present02">
-                <img loading="lazy" src="./asset/img/nagomi/bbq.jpg" alt="初期支出" width="510" height="330">
-                <p class="name">初期支出 144,480<br><small>コテージ・ペット・車代</small></p>
+                <img loading="lazy" src="./asset/img/nagomi/bbq.jpg" alt="使いみち" width="510" height="330">
+                <p class="name">残金＝入金−自分の分<br><small>コテージ・食材・車代など</small></p>
               </div>
 
               <div class="present03">
                 <img loading="lazy" src="./asset/img/nagomi/drive.jpg" alt="車代" width="510" height="330">
-                <p class="name">車代実費 32,500<br><small>負担者8人へ自動配分</small></p>
+                <p class="name">運転手は車代ゼロ<br><small>実費は乗る人8人でわる</small></p>
               </div>
             </div>
 
             <div class="infoArea js_anim_scroll -fadein nagomi-budget-panel">
-              <div class="nagomi-tabs" role="tablist" aria-label="共同財布メニュー">
-                <button type="button" class="nagomi-tab is-active" data-tab="wallet" role="tab" aria-selected="true">共同財布</button>
-                <button type="button" class="nagomi-tab" data-tab="deposits" role="tab" aria-selected="false">入金状況</button>
-                <button type="button" class="nagomi-tab" data-tab="expenses" role="tab" aria-selected="false">支出履歴</button>
-                <button type="button" class="nagomi-tab" data-tab="settlement" role="tab" aria-selected="false">個人別精算</button>
+              <details class="nagomi-rules">
+                <summary>計算のルール（ここを開く）</summary>
+                <div class="nagomi-rules-body">
+                  <p><strong>基本</strong><br>
+                    残金 ＝ 入金額 − 自分の負担額</p>
+                  <p><strong>入金</strong><br>
+                    11人全員が最初に 20,000円ずつ入れる（合計 220,000円）。</p>
+                  <p><strong>コテージ費（共同9人）</strong><br>
+                    6人用 50,160円 ＋ 共同4人用 29,920円 ＋ ペット代 1,980円 ＝ 82,060円<br>
+                    → ゆうじろうくん・彼女を除く9人でわりかん。</p>
+                  <p><strong>ゆうじろうくんのコテージ</strong><br>
+                    4人用 29,920円は、ゆうじろうくんひとりの負担。</p>
+                  <p><strong>車代</strong><br>
+                    実費 32,500円（けん12,000／ザッキィー10,000／ゆうじろう10,500）<br>
+                    → 運転手3人以外の8人でわりかん。運転手は0円。</p>
+                  <p><strong>食材・レンタルなど</strong><br>
+                    登録した支出を、選んだメンバーでわりかん（端数の1円は順番に配る）。</p>
+                  <p><strong>残金の見方</strong><br>
+                    プラス → 帰りに戻ってくる見込み<br>
+                    マイナス → あとから追加で払う見込み<br>
+                    ゼロ → ぴったり</p>
+                </div>
+              </details>
+
+              <div class="nagomi-simple-toolbar">
+                <button type="button" class="m_btn_main js_expense_open"><a href="javascript:void(0)">支出を追加</a></button>
+                <p class="nagomi-simple-hint" id="budget_hint"></p>
               </div>
 
-              <div class="nagomi-tab-panels">
-                <div class="nagomi-tab-panel is-active" data-panel="wallet" role="tabpanel">
-                  <div id="budget_wallet" class="nagomi-wallet-grid"></div>
-                </div>
-                <div class="nagomi-tab-panel" data-panel="deposits" role="tabpanel" hidden>
-                  <div id="budget_deposits" class="nagomi-deposit-list"></div>
-                </div>
-                <div class="nagomi-tab-panel" data-panel="expenses" role="tabpanel" hidden>
-                  <div class="nagomi-expense-toolbar">
-                    <button type="button" class="m_btn_main js_expense_open"><a href="javascript:void(0)">支出を登録</a></button>
-                    <label class="nagomi-check-inline"><input type="checkbox" id="show_deleted_expenses"> 削除済みを表示</label>
-                  </div>
-                  <div id="budget_expenses" class="nagomi-expense-list"></div>
-                </div>
-                <div class="nagomi-tab-panel" data-panel="settlement" role="tabpanel" hidden>
-                  <div id="budget_settlement_summary" class="nagomi-wallet-grid"></div>
-                  <div id="budget_settlement" class="nagomi-settle-list"></div>
-                </div>
-              </div>
+              <div id="budget_people" class="nagomi-people-simple"></div>
             </div>
           </div>
 

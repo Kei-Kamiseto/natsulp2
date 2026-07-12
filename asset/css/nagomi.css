@@ -1829,3 +1829,132 @@
   }
   .nagomi-people-checks{grid-template-columns:1fr}
 }
+
+/* ========== Simple per-person budget list ========== */
+#page_top #campaign .nagomi-rules{
+  margin-bottom:2rem;
+  border:.2rem solid #333;
+  border-radius:1.2rem;
+  background:#fff;
+  padding:0;
+  overflow:hidden;
+}
+#page_top #campaign .nagomi-rules summary{
+  cursor:pointer;
+  list-style:none;
+  padding:1.4rem 1.8rem;
+  font-weight:700;
+  font-size:1.45rem;
+  letter-spacing:.06em;
+  background:#deeef5;
+}
+#page_top #campaign .nagomi-rules summary::-webkit-details-marker{display:none}
+#page_top #campaign .nagomi-rules-body{
+  padding:1.6rem 1.8rem 2rem;
+  font-size:1.35rem;
+  line-height:1.8;
+  letter-spacing:.03em;
+}
+#page_top #campaign .nagomi-rules-body p{margin:0 0 1.4rem}
+#page_top #campaign .nagomi-rules-body p:last-child{margin-bottom:0}
+#page_top #campaign .nagomi-simple-toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:1.2rem;
+  margin-bottom:1.6rem;
+}
+#page_top #campaign .nagomi-simple-hint{
+  font-size:1.3rem;
+  color:#555;
+  letter-spacing:.04em;
+}
+#page_top #campaign .nagomi-people-simple{
+  display:flex;
+  flex-direction:column;
+  gap:1.4rem;
+}
+#page_top #campaign .nagomi-simple-card{
+  background:#f7f7f7;
+  border:.2rem solid #333;
+  border-radius:1.4rem;
+  padding:1.8rem 1.6rem 1.6rem;
+}
+#page_top #campaign .nagomi-simple-card header{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  margin-bottom:1.2rem;
+}
+#page_top #campaign .nagomi-simple-card h3{
+  font-size:2rem;
+  letter-spacing:.08em;
+  margin:0;
+}
+#page_top #campaign .nagomi-deposit-line{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  font-size:1.5rem;
+  margin-bottom:1rem;
+  padding-bottom:1rem;
+  border-bottom:1px solid #ddd;
+}
+#page_top #campaign .nagomi-deposit-line strong{
+  font-family:Outfit,sans-serif;
+  font-size:2.2rem;
+}
+#page_top #campaign .nagomi-cost-lines{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+#page_top #campaign .nagomi-cost-lines li{
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.7rem 0;
+  font-size:1.45rem;
+  border-bottom:1px dashed #ddd;
+}
+#page_top #campaign .nagomi-cost-lines em{
+  font-style:normal;
+  font-family:Outfit,sans-serif;
+  font-weight:700;
+  text-align:right;
+}
+#page_top #campaign .nagomi-remain{
+  margin:1.4rem 0 1rem;
+  padding:1.2rem 1.4rem;
+  border-radius:1rem;
+  border:.2rem solid #333;
+  font-size:1.7rem;
+  font-weight:700;
+  text-align:right;
+  letter-spacing:.04em;
+}
+#page_top #campaign .nagomi-remain.is-plus{
+  background:#e7f6ea;
+  color:#2f7d4a;
+}
+#page_top #campaign .nagomi-remain.is-minus{
+  background:#fff0f3;
+  color:#c9536f;
+}
+#page_top #campaign .nagomi-remain.is-zero{
+  background:#f0f0f0;
+  color:#555;
+}
+#page_top #campaign .nagomi-paid-toggle,
+#page_top #campaign .nagomi-paid-state{
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+  font-size:1.35rem;
+  font-weight:700;
+  margin:0;
+}
+#page_top #campaign .nagomi-paid-toggle input{
+  width:1.8rem;
+  height:1.8rem;
+}

@@ -66,6 +66,23 @@
     other: 'その他'
   };
 
+  /** 画面表示用のざっくり費目 */
+  var BUCKET_LABELS = {
+    cottage: 'コテージ費',
+    food: '食材費',
+    rental: 'レンタル費',
+    car: '車代',
+    other: 'その他'
+  };
+
+  function expenseBucket(category) {
+    if (category === 'accommodation' || category === 'pet') return 'cottage';
+    if (category === 'food' || category === 'drink' || category === 'supplies') return 'food';
+    if (category === 'rental') return 'rental';
+    if (category === 'transportation') return 'car';
+    return 'other';
+  }
+
   var DEPOSIT_STATUS_LABELS = {
     unpaid: '未払い',
     partial: '一部支払い',
@@ -360,21 +377,32 @@
         refundAmount: 0,
         additionalAmount: 0,
         settlementStatus: (budget.settlements[p.id] && budget.settlements[p.id].settlementStatus) || 'unsettled',
-        breakdown: []
+        breakdown: [],
+        buckets: {
+          cottage: 0,
+          food: 0,
+          rental: 0,
+          car: 0,
+          other: 0
+        }
       };
     });
 
     activeExpenses(budget).forEach(function (expense) {
       if (expense.paymentStatus !== 'paid') return;
+      var bucket = expenseBucket(expense.category);
       var allocs = expenseAllocations(expense);
       allocs.forEach(function (a) {
         var row = map[a.participantId];
         if (!row) return;
         row.actualBurden += a.amount;
+        row.buckets[bucket] = (row.buckets[bucket] || 0) + a.amount;
         row.breakdown.push({
           expenseId: expense.id,
           title: expense.title,
           amount: expense.amount,
+          category: expense.category,
+          bucket: bucket,
           allocationType: expense.allocationType,
           allocationLabel: ALLOCATION_LABELS[expense.allocationType] || expense.allocationType,
           participantCount: expense.participantIds.length,
@@ -545,6 +573,7 @@
     yujiroOnly: yujiroOnly,
     ALLOCATION_LABELS: ALLOCATION_LABELS,
     CATEGORY_LABELS: CATEGORY_LABELS,
+    BUCKET_LABELS: BUCKET_LABELS,
     DEPOSIT_STATUS_LABELS: DEPOSIT_STATUS_LABELS,
     SETTLEMENT_STATUS_LABELS: SETTLEMENT_STATUS_LABELS,
     NAME_TO_ID: NAME_TO_ID,
