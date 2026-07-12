@@ -456,7 +456,10 @@
   display:none !important;
   content:none !important;
 }
-#page_top #life .ttlArea .visual .media{
+/* Section hero videos (life slideshow / food·story single loop) */
+#page_top #life .ttlArea .visual .media,
+#page_top #food .ttlArea .visual .media,
+#page_top #story .ttlArea .visual .media{
   position:absolute;
   top:0;
   left:0;
@@ -464,7 +467,9 @@
   height:100%;
   overflow:hidden;
 }
-#page_top #life .ttlArea .visual .media video{
+#page_top #life .ttlArea .visual .media video,
+#page_top #food .ttlArea .visual .media video,
+#page_top #story .ttlArea .visual .media video{
   position:absolute;
   top:0;
   left:0;
@@ -476,7 +481,9 @@
   transition:opacity 1s ease;
   pointer-events:none;
 }
-#page_top #life .ttlArea .visual .media video.is-active{
+#page_top #life .ttlArea .visual .media video.is-active,
+#page_top #food .ttlArea .visual .media video.is-active,
+#page_top #story .ttlArea .visual .media video.is-active{
   opacity:1;
   z-index:1;
 }
@@ -486,6 +493,17 @@
   height:auto;
   aspect-ratio:930/620;
   object-fit:cover;
+}
+
+/* Tighten food/story after removing image galleries */
+#page_top #food .contentsArea,
+#page_top #story .contentsArea{
+  margin-top:4rem;
+  padding-bottom:2rem;
+}
+#page_top #food .contentsArea .wrap .txtBox,
+#page_top #story .contentsArea .wrap .txtBox{
+  margin-bottom:0;
 }
 
 /* Budget progress bar inside campaign infoArea */
@@ -1159,13 +1177,17 @@
     height:100% !important;
     object-fit:cover;
   }
-  #page_top #life .ttlArea .visual .media{
+  #page_top #life .ttlArea .visual .media,
+  #page_top #food .ttlArea .visual .media,
+  #page_top #story .ttlArea .visual .media{
     position:absolute !important;
     inset:0;
     width:100% !important;
     height:100% !important;
   }
-  #page_top #life .ttlArea .visual .media video{
+  #page_top #life .ttlArea .visual .media video,
+  #page_top #food .ttlArea .visual .media video,
+  #page_top #story .ttlArea .visual .media video{
     width:100% !important;
     height:100% !important;
     object-fit:cover;

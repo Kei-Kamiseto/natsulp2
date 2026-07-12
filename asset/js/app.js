@@ -596,6 +596,24 @@
     });
   }
 
+  /* ---------- section hero videos: keep muted loop playing ---------- */
+  function initSecVideos() {
+    const wraps = document.querySelectorAll('.js_sec_video, .js_life_videos');
+    wraps.forEach(function (wrap) {
+      const videos = Array.prototype.slice.call(wrap.querySelectorAll('video'));
+      videos.forEach(function (v) {
+        v.muted = true;
+        v.playsInline = true;
+        v.setAttribute('playsinline', '');
+        v.loop = true;
+        try {
+          const p = v.play();
+          if (p && typeof p.catch === 'function') p.catch(function () {});
+        } catch (e) {}
+      });
+    });
+  }
+
   /* ---------- #life video slideshow: 9 → 7 → 8, 5s each, fade loop ---------- */
   function initLifeVideos() {
     const wrap = document.querySelector('.js_life_videos');
@@ -669,6 +687,7 @@
     // user gesture fallback: any click/touch resumes
     function unlock() {
       playAll();
+      initSecVideos();
       document.removeEventListener('click', unlock);
       document.removeEventListener('touchstart', unlock);
     }
@@ -681,6 +700,7 @@
     try { initAnimations(); } catch (e) { console.error(e); }
     try { initFvVideos(); } catch (e) { console.error(e); }
     try { initLifeVideos(); } catch (e) { console.error(e); }
+    try { initSecVideos(); } catch (e) { console.error(e); }
     try { bindUI(); } catch (e) { console.error(e); }
     try { loadAll(); } catch (e) { console.error(e); }
   }
