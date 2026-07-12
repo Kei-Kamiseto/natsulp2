@@ -1838,6 +1838,68 @@
   .nagomi-people-checks{grid-template-columns:1fr}
 }
 
+/* ========== Mobile zoom / overflow hard lock ========== */
+html{
+  width:100%;
+  max-width:100%;
+  overflow-x:clip;
+  touch-action:manipulation;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+body{
+  width:100% !important;
+  max-width:100% !important;
+  overflow-x:clip !important;
+  touch-action:manipulation;
+  overscroll-behavior-x:none;
+}
+#page_top,
+#l_container,
+#l_footer,
+#campaign,
+#fv,
+#program,
+#message{
+  max-width:100%;
+  overflow-x:clip;
+}
+#page_top #fv .linkArea,
+#page_top #fv .linkArea ul,
+#page_top .m_txt_loop,
+#page_top .loopTxt{
+  max-width:100%;
+  overflow:hidden !important;
+}
+#page_top #fv .linkArea ul{
+  width:max-content !important;
+}
+
+@media screen and (max-width:1023px){
+  html{
+    font-size:clamp(9px, 2.6666666667vw, 12px) !important;
+  }
+  body{
+    min-width:0 !important;
+    width:100% !important;
+  }
+  .m_box_fixed,
+  #page_top #fv .wrapper,
+  #page_top #campaign .wrap{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+  #page_top #fv .linkArea{
+    overflow:hidden !important;
+  }
+  #page_top #campaign .wrap{
+    padding-left:1.2rem !important;
+    padding-right:1.2rem !important;
+  }
+}
+
 /* ========== Simple per-person budget list ========== */
 html{
   touch-action:manipulation;

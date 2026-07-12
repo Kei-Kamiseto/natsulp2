@@ -3,7 +3,36 @@
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+  <script>
+  (function () {
+    function lockMeta() {
+      var m = document.querySelector('meta[name="viewport"]');
+      if (!m) {
+        m = document.createElement('meta');
+        m.name = 'viewport';
+        document.head.appendChild(m);
+      }
+      m.setAttribute(
+        'content',
+        'width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover'
+      );
+    }
+    lockMeta();
+    document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
+    document.addEventListener('gesturechange', function (e) { e.preventDefault(); }, { passive: false });
+    document.addEventListener('gestureend', function (e) { e.preventDefault(); }, { passive: false });
+    document.addEventListener('touchmove', function (e) {
+      if (e.touches && e.touches.length > 1) e.preventDefault();
+    }, { passive: false });
+    var lastTouchEnd = 0;
+    document.addEventListener('touchend', function (e) {
+      var now = Date.now();
+      if (now - lastTouchEnd <= 300) e.preventDefault();
+      lastTouchEnd = now;
+    }, { passive: false });
+  })();
+  </script>
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="家庭料理 和みのママと、いつもの常連仲間。この夏は淡路島で大人の合宿。BBQと花火と、少しの本気の遊びを持ち寄って。和みの大人夏合宿 2026 in 淡路じゃのひれ。">
   <meta name="keywords" content="和み,大人夏合宿,淡路島,じゃのひれ,BBQ">
@@ -33,11 +62,11 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=budget5">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=budget6">
 
   <script src="./asset/js/vender.js"></script>
-  <script src="./asset/js/nagomi-budget.js?v=budget5"></script>
-  <script defer src="./asset/js/app.js?v=budget5"></script>
+  <script src="./asset/js/nagomi-budget.js?v=budget6"></script>
+  <script defer src="./asset/js/app.js?v=budget6"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
