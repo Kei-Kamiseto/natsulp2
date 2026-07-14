@@ -340,7 +340,7 @@
   function requireWrite(thenFn) {
     requireMe(function () {
       if (isObserver()) {
-        alert('ゲスト／オブザーバ―は閲覧のみです。入力・更新はできません。');
+        alert('ゲストは閲覧のみです。入力・更新はできません。');
         return;
       }
       thenFn();
@@ -383,7 +383,7 @@
       var fn = pendingAction;
       pendingAction = null;
       if (name === OBSERVER_NAME || name === 'ゲスト') {
-        alert('ゲスト／オブザーバ―は閲覧のみです。入力・更新はできません。');
+        alert('ゲストは閲覧のみです。入力・更新はできません。');
         return;
       }
       fn();
