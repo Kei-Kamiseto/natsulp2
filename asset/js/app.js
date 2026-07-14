@@ -396,6 +396,10 @@
     if (!modal) return;
     modal.classList.add('is-show');
     modal.setAttribute('aria-hidden', 'false');
+    try {
+      document.body.classList.add('is-name-modal-open');
+      modal.scrollTop = 0;
+    } catch (e) { /* ignore */ }
   }
 
   function closeNameModal() {
@@ -403,6 +407,9 @@
     if (!modal) return;
     modal.classList.remove('is-show');
     modal.setAttribute('aria-hidden', 'true');
+    try {
+      document.body.classList.remove('is-name-modal-open');
+    } catch (e) { /* ignore */ }
   }
 
   function requireMe(thenFn) {

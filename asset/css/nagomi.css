@@ -791,25 +791,27 @@
   letter-spacing:.18em;
 }
 
-/* Name modal */
+/* Name modal — iOSでも確実にスクロールできる単一スクロール領域 */
 #name_modal{
   position:fixed;
   inset:0;
   z-index:600;
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
+  display:block;
   background:rgba(51,51,51,.55);
   opacity:0;
   visibility:hidden;
   pointer-events:none;
   transition:opacity .3s,visibility .3s;
-  padding:max(1.2rem, env(safe-area-inset-top)) 1.2rem max(1.2rem, env(safe-area-inset-bottom));
+  padding:0;
+  margin:0;
+  width:100%;
+  height:100%;
+  height:100dvh;
   overflow-x:hidden;
-  overflow-y:auto;
+  overflow-y:scroll;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
-  touch-action:pan-y;
+  touch-action:pan-y !important;
 }
 #name_modal.is-show{
   opacity:1;
@@ -817,22 +819,26 @@
   pointer-events:auto;
 }
 #name_modal .inner{
-  width:100%;
+  display:block;
+  width:calc(100% - 2.4rem);
   max-width:56rem;
-  max-height:calc(100dvh - 2.4rem);
-  max-height:calc(100vh - 2.4rem);
-  margin:auto;
+  max-height:none;
+  margin:max(1.6rem, env(safe-area-inset-top)) auto max(2.4rem, env(safe-area-inset-bottom));
   background:#fff;
   border:.3rem solid #333;
   border-radius:2rem;
   padding:3.2rem 2.8rem;
   text-align:center;
-  overflow-x:hidden;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior:contain;
-  touch-action:pan-y;
+  overflow:visible;
   box-sizing:border-box;
+  touch-action:pan-y !important;
+}
+body.is-name-modal-open{
+  overflow:hidden !important;
+  touch-action:none;
+}
+body.is-name-modal-open #name_modal{
+  touch-action:pan-y !important;
 }
 #name_modal .inner h2{
   font-family:YakuHanMP,'游明朝','Yu Mincho',serif,sans-serif;
@@ -1439,15 +1445,17 @@ body.is-observer .js_join_btn.is-readonly{
   }
   #page_top #campaign .pack-grid{grid-template-columns:1fr !important}
 
-  #name_modal{
-    padding:max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
-  }
   #name_modal .inner{
+    width:calc(100% - 2rem);
     padding:2.4rem 1.6rem;
-    max-height:calc(100dvh - 2rem);
-    max-height:calc(100vh - 2rem);
+    margin-top:max(1.2rem, env(safe-area-inset-top));
+    margin-bottom:max(2rem, env(safe-area-inset-bottom));
   }
   #name_modal .name-grid{grid-template-columns:1fr}
+  #name_modal .nagomi-name-hint{
+    font-size:1.2rem;
+    margin-bottom:1.2rem;
+  }
 }
 
 /* タブレット〜スマホ横向きでもデスクトップ幅を出さない */

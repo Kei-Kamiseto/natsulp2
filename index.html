@@ -28,8 +28,16 @@
       if (e.touches && e.touches.length > 1) e.preventDefault();
     }, { passive: false });
     var lastTouchEnd = 0;
+    function isScrollModalTarget(t) {
+      return !!(t && t.closest && t.closest('#name_modal, #expense_modal, .nagomi-modal'));
+    }
     document.addEventListener('touchend', function (e) {
       var now = Date.now();
+      // モーダル内はスクロール優先（ダブルタップズーム防止でスクロールが死ぬのを避ける）
+      if (isScrollModalTarget(e.target)) {
+        lastTouchEnd = now;
+        return;
+      }
       if (now - lastTouchEnd <= 300) e.preventDefault();
       lastTouchEnd = now;
     }, { passive: false });
@@ -64,14 +72,14 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=obs4">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=obs5">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./asset/js/supabase-config.js?v=obs4"></script>
-  <script src="./asset/js/nagomi-store.js?v=obs4"></script>
+  <script src="./asset/js/supabase-config.js?v=obs5"></script>
+  <script src="./asset/js/nagomi-store.js?v=obs5"></script>
   <script src="./asset/js/vender.js"></script>
-  <script src="./asset/js/nagomi-budget.js?v=obs4"></script>
-  <script defer src="./asset/js/app.js?v=obs4"></script>
+  <script src="./asset/js/nagomi-budget.js?v=obs5"></script>
+  <script defer src="./asset/js/app.js?v=obs5"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
