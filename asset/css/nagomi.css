@@ -187,12 +187,19 @@
   color:#333;
 }
 #page_top #fv .badge #countdown .count-enjoy{
-  display:flex;
+  display:none;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   gap:.1rem;
   width:100%;
+}
+#page_top #fv .badge #countdown.is-day .count-remain{
+  display:none !important;
+}
+#page_top #fv .badge #countdown.is-day .count-enjoy,
+#page_top #fv .badge #countdown .count-enjoy:not([hidden]){
+  display:flex !important;
 }
 #page_top #fv .badge #countdown .count-enjoy[hidden]{
   display:none !important;

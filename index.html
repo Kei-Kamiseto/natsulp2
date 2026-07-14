@@ -72,14 +72,15 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=day1">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=day2">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./asset/js/supabase-config.js?v=day1"></script>
-  <script src="./asset/js/nagomi-store.js?v=day1"></script>
+  <script src="./asset/js/supabase-config.js?v=day2"></script>
+  <script src="./asset/js/nagomi-store.js?v=day2"></script>
   <script src="./asset/js/vender.js"></script>
-  <script src="./asset/js/nagomi-budget.js?v=day1"></script>
-  <script defer src="./asset/js/app.js?v=day1"></script>
+  <script src="./asset/js/nagomi-budget.js?v=day2"></script>
+  <script src="./asset/js/countdown.js?v=day2"></script>
+  <script defer src="./asset/js/app.js?v=day2"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
@@ -1013,50 +1014,5 @@
     </div>
   </div>
 
-  <script>
-  (function () {
-    /* Countdown → 2026-07-26T09:30:00+09:00 / 当日到達後は Let’s Enjoy!
-       確認用: ?enjoy=1 で当日表示をプレビュー */
-    var target = new Date('2026-07-26T09:30:00+09:00').getTime();
-    var forceEnjoy = false;
-    try {
-      forceEnjoy = new URLSearchParams(location.search).get('enjoy') === '1';
-    } catch (e) { /* ignore */ }
-    function pad(n) { return String(n).padStart(2, '0'); }
-    function tick() {
-      var now = Date.now();
-      var diff = Math.max(0, target - now);
-      var root = document.getElementById('countdown');
-      if (!root) return;
-      var badge = root.closest('.badge');
-      var remain = root.querySelector('.count-remain');
-      var enjoy = root.querySelector('.count-enjoy');
-      var isDay = forceEnjoy || diff <= 0;
-
-      root.classList.toggle('is-day', isDay);
-      root.classList.toggle('-remain', !isDay);
-      if (badge) badge.classList.toggle('is-day', isDay);
-      if (remain) remain.hidden = isDay;
-      if (enjoy) enjoy.hidden = !isDay;
-
-      if (isDay) return;
-
-      var days = Math.floor(diff / 86400000);
-      var hours = Math.floor((diff % 86400000) / 3600000);
-      var min = Math.floor((diff % 3600000) / 60000);
-      var sec = Math.floor((diff % 60000) / 1000);
-      var d = root.querySelector('[data-unit="days"]');
-      var h = root.querySelector('[data-unit="hours"]');
-      var m = root.querySelector('[data-unit="min"]');
-      var s = root.querySelector('[data-unit="sec"]');
-      if (d) d.textContent = String(days);
-      if (h) h.textContent = pad(hours);
-      if (m) m.textContent = pad(min);
-      if (s) s.textContent = pad(sec);
-    }
-    tick();
-    setInterval(tick, 1000);
-  })();
-  </script>
 </body>
 </html>
