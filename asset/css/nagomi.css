@@ -853,6 +853,50 @@
   background:#fdefcd;
   margin-top:.4rem;
 }
+#name_modal .js_name_btn.-observer{
+  grid-column:1 / -1;
+  background:#eef1ee;
+  border-style:dashed;
+  margin-top:.2rem;
+}
+#name_modal .nagomi-name-hint{
+  margin:0 0 1.4rem;
+  font-size:1.3rem;
+  line-height:1.6;
+  color:#5c635c;
+  letter-spacing:.04em;
+}
+#page_top #campaign .nagomi-observer-banner{
+  margin:.8rem 0 0;
+  padding:.8rem 1.1rem;
+  font-size:1.25rem;
+  line-height:1.55;
+  letter-spacing:.04em;
+  color:#5a5348;
+  background:rgba(238,241,238,.95);
+  border:.1rem dashed rgba(90,83,72,.35);
+}
+body.is-observer .js_join_btn,
+body.is-observer .js_list_add,
+body.is-observer .js_list_input,
+body.is-observer .js_expense_open,
+body.is-observer .js_deposit_input,
+body.is-observer .js_del,
+body.is-observer .js_board_post,
+body.is-observer .js_board_input,
+body.is-observer .js_shop_amount,
+body.is-observer .js_shop_expense,
+body.is-observer .js_shop_to_expense,
+body.is-observer .js_expense_edit,
+body.is-observer .js_expense_delete,
+body.is-observer .js_list_check{
+  pointer-events:none !important;
+  opacity:.55;
+}
+body.is-observer .js_join_btn.is-readonly{
+  cursor:default;
+  opacity:.7;
+}
 
 /* Toast */
 #toast{
@@ -2050,6 +2094,27 @@ html{
   color:#555;
   letter-spacing:.04em;
   margin:0 0 1.6rem;
+}
+#page_top #campaign .nagomi-sync-status{
+  display:inline-block;
+  margin:.8rem 0 0;
+  padding:.45rem .9rem;
+  font-size:1.2rem;
+  letter-spacing:.06em;
+  border:.1rem solid rgba(51,51,51,.35);
+  background:rgba(255,255,255,.55);
+  color:#4a534c;
+}
+#page_top #campaign .nagomi-sync-status.is-shared{
+  border-color:rgba(46,110,72,.45);
+  color:#2e6e48;
+  background:rgba(230,245,236,.85);
+}
+#page_top #campaign .nagomi-sync-status.is-shared.is-live{
+  border-color:rgba(46,110,72,.7);
+}
+#page_top #campaign .nagomi-sync-status.is-local{
+  color:#6a655c;
 }
 #page_top #campaign .nagomi-deposit-input-wrap{
   display:inline-flex;

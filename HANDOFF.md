@@ -82,30 +82,27 @@ https://kei-kamiseto.github.io/natsulp2/?v=start2
 
 ---
 
-## 4. 最重要の未解決課題（次のCursorへの本命）
+## 4. 共有ストレージ（Supabase Realtime）
 
-### 参加者みんなではデータ共有できていない
+**実装済み（接続キー設定待ち）。** 詳細は `SETUP_SHARE.md`。
 
-仕様書は Claude アーティファクトの `window.storage`（共有）前提。  
-**GitHub Pages には `window.storage` が無い。**
+| ファイル | 役割 |
+|---|---|
+| `supabase/schema.sql` | `nagomi_kv` + RLS + Realtime |
+| `asset/js/supabase-config.js` | Project URL / anon key（**ここを埋めると同期ON**） |
+| `asset/js/nagomi-store.js` | get/set + Realtime 購読 |
+| `asset/js/app.js` | 遠隔更新の再描画・共有時の初期シード制御 |
 
-現状 `asset/js/app.js` の store:
+挙動:
 
-1. `window.storage.get/set(..., true)` があれば使う  
-2. なければ **`localStorage` の `nagomi_share_*` にフォールバック**
+1. `supabase-config.js` に URL+anon があり疎通OK → **みんなと同期**（Realtime）
+2. 未設定 / 失敗 → 従来どおり **端末の localStorage**（`nagomi_share_*`）
+3. 「自分は誰か」は引き続き端末ローカル `nagomi_me`
+4. 共有DBが空のときだけ初期データをシード。既存共有データを開いただけでは消さない
 
-→ 端末ごとに別データ。URLを共有しても入金・参加・支出は同期しない。  
-「自分は誰か」だけ `localStorage.nagomi_me`。
+画面: 予算セクションに同期ステータス（`#nagomi_sync_status`）
 
-### やるべき次タスク
-`store.get/set` を **Supabase（または Firebase）ラッパー**に差し替える。
-
-- フォルダ `supabase/` はあるが中身ほぼ空（`.env` は gitignore）
-- `get/set` インターフェースを維持すれば UI 側はほぼ触らなくてよい
-- shared=true 相当で全員同じキーを読む
-- リアルタイム同期（Realtime）があると参加ボタンが快適
-
-仕様書 §9 にも代替案あり。
+キャッシュ確認用: `?v=share1`
 
 ---
 

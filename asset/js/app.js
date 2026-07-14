@@ -15,6 +15,7 @@
   /* ---------- Members ---------- */
   var ALL11 = B.payerNames.slice();
   var ADMIN_NAME = B.ADMIN_NAME;
+  var OBSERVER_NAME = 'オブザーバ―';
 
   var MEMBERS = {};
   B.PARTICIPANTS.forEach(function (p) {
@@ -22,6 +23,7 @@
   });
   MEMBERS['ゲスト'] = { ini: 'ゲ', color: '#6f7a74', id: 'guest', pin: null };
   MEMBERS['はなちゃん'] = { ini: 'は', color: '#8b6b4a', id: 'hana', pin: null };
+  MEMBERS[OBSERVER_NAME] = { ini: '見', color: '#8a9088', id: 'observer', pin: null };
 
   function makeShopDefaults(seedList, storeName) {
     return (seedList || []).map(function (item, i) {
@@ -169,12 +171,16 @@
   var editingExpenseId = null;
   var shopExpenseLink = null; // { storeKey, itemId } when registering from shop
 
-  /* ---------- Storage (window.storage with local fallback) ---------- */
+  /* ---------- Storage (Supabase share → window.storage → local) ---------- */
   var memoryStore = {};
+  var usingSharedStore = false;
 
   var store = {
     async get(k, d) {
       try {
+        if (window.NagomiStore && typeof window.NagomiStore.get === 'function') {
+          return await window.NagomiStore.get(k, d);
+        }
         if (window.storage && typeof window.storage.get === 'function') {
           var r = await window.storage.get(k, true);
           if (r && r.value != null) return JSON.parse(r.value);
@@ -190,6 +196,11 @@
     },
     async set(k, v, silent) {
       try {
+        if (window.NagomiStore && typeof window.NagomiStore.set === 'function') {
+          await window.NagomiStore.set(k, v, silent);
+          if (!silent) toast();
+          return;
+        }
         var s = JSON.stringify(v);
         if (window.storage && typeof window.storage.set === 'function') {
           await window.storage.set(k, s, true);
@@ -207,6 +218,63 @@
     }
   };
 
+  function updateSyncBadge(statusPayload) {
+    var el = document.getElementById('nagomi_sync_status');
+    if (!el) return;
+    var mode = window.NagomiStore && window.NagomiStore.getMode
+      ? window.NagomiStore.getMode()
+      : 'local';
+    var label = window.NagomiStore && window.NagomiStore.getStatusLabel
+      ? window.NagomiStore.getStatusLabel()
+      : 'この端末のみ';
+    var live = statusPayload && statusPayload.status === 'SUBSCRIBED';
+    el.className = 'nagomi-sync-status' +
+      (mode === 'supabase' ? ' is-shared' : ' is-local') +
+      (live ? ' is-live' : '');
+    el.textContent = mode === 'supabase'
+      ? (live ? '● みんなと同期中（自動更新）' : '◎ 共有接続中…')
+      : '○ ' + label;
+  }
+
+  function applyRemoteKey(key, value, meta) {
+    if (!key) return;
+    if (meta && meta.status) {
+      updateSyncBadge(value);
+      return;
+    }
+    if (key === 'freshStart' || key === 'packSeed') return;
+
+    if (key === 'events') {
+      state.events = migrateEvents(value || DEFAULTS.events);
+      renderEvents();
+    } else if (key === 'budget') {
+      var shaped = B.ensureBudgetShape(value);
+      state.budget = shaped || B.createDefaultBudget();
+      renderBudget();
+    } else if (key === 'shared') {
+      state.shared = ensureSharedDefaults(value || DEFAULTS.shared);
+      renderAllLists();
+    } else if (key === 'pack') {
+      state.pack = ensurePackDefaults(value || DEFAULTS.pack);
+      renderAllLists();
+    } else if (key === 'konan') {
+      state.konan = ensureKonanDefaults(value || DEFAULTS.konan);
+      renderAllLists();
+    } else if (key === 'ropia') {
+      state.ropia = normalizeShopList(value || DEFAULTS.ropia, 'ropia');
+      renderAllLists();
+    } else if (key === 'board') {
+      state.board = value || [];
+      renderAllLists();
+    } else {
+      return;
+    }
+    if (meta && meta.remote) {
+      var who = meta.by ? (meta.by + 'さんが更新') : '仲間が更新';
+      toast(who + 'しました ✓');
+    }
+  }
+
   function uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   }
@@ -219,9 +287,11 @@
     }
   }
 
-  function toast() {
+  function toast(message) {
     var el = document.getElementById('toast');
     if (!el) return;
+    if (message) el.textContent = message;
+    else el.textContent = '保存しました ✓';
     el.classList.add('is-show');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () {
@@ -244,6 +314,36 @@
 
   function isAdmin() {
     return getMe() === ADMIN_NAME;
+  }
+
+  function isObserver() {
+    return getMe() === OBSERVER_NAME;
+  }
+
+  function canWrite() {
+    return !!getMe() && !isObserver();
+  }
+
+  function applyObserverMode() {
+    var on = isObserver();
+    try {
+      document.body.classList.toggle('is-observer', on);
+    } catch (e) { /* ignore */ }
+    var banner = document.getElementById('nagomi_observer_banner');
+    if (banner) {
+      banner.hidden = !on;
+      banner.setAttribute('aria-hidden', on ? 'false' : 'true');
+    }
+  }
+
+  function requireWrite(thenFn) {
+    requireMe(function () {
+      if (isObserver()) {
+        alert('オブザーバ―は閲覧のみです。入力・更新はできません。');
+        return;
+      }
+      thenFn();
+    });
   }
 
   function participantName(id) {
@@ -277,9 +377,14 @@
       localStorage.setItem('nagomi_me', name);
     } catch (e) { /* ignore */ }
     closeNameModal();
+    applyObserverMode();
     if (pendingAction) {
       var fn = pendingAction;
       pendingAction = null;
+      if (name === OBSERVER_NAME) {
+        alert('オブザーバ―は閲覧のみです。入力・更新はできません。');
+        return;
+      }
       fn();
     }
   }
@@ -339,15 +444,24 @@
         }
       }
       if (btn) {
-        var joined = me && list.indexOf(me) !== -1;
-        btn.classList.toggle('is-joined', !!joined);
-        btn.textContent = joined ? '参加中' : '参加はクリック！';
+        if (isObserver()) {
+          btn.classList.remove('is-joined');
+          btn.classList.add('is-readonly');
+          btn.textContent = '閲覧のみ';
+          btn.setAttribute('aria-disabled', 'true');
+        } else {
+          var joined = me && list.indexOf(me) !== -1;
+          btn.classList.remove('is-readonly');
+          btn.removeAttribute('aria-disabled');
+          btn.classList.toggle('is-joined', !!joined);
+          btn.textContent = joined ? '参加中' : '参加はクリック！';
+        }
       }
     });
   }
 
   async function toggleJoin(key) {
-    requireMe(async function () {
+    requireWrite(async function () {
       var name = getMe();
       var list = state.events[key] ? state.events[key].slice() : [];
       var i = list.indexOf(name);
@@ -618,7 +732,7 @@
   }
 
   function openExpenseModal(expense, shopLink) {
-    requireMe(function () {
+    requireWrite(function () {
       var modal = document.getElementById('expense_modal');
       var form = document.getElementById('expense_form');
       var ttl = document.getElementById('expense_modal_ttl');
@@ -683,7 +797,7 @@
     var errEl = document.getElementById('expense_error');
     if (!form) return;
 
-    requireMe(async function () {
+    requireWrite(async function () {
       var fd = new FormData(form);
       var title = String(fd.get('title') || '').trim();
       var amount = Math.floor(Number(fd.get('amount')));
@@ -829,7 +943,7 @@
   }
 
   function registerShopExpense(storeKey, itemId) {
-    requireMe(function () {
+    requireWrite(function () {
       var list = state[storeKey] || [];
       var item = list.find(function (it) { return it.id === itemId; });
       if (!item) return;
@@ -950,7 +1064,7 @@
   }
 
   async function addListItem(storeKey, name) {
-    requireMe(async function () {
+    requireWrite(async function () {
       var inputSel = storeKey === 'pack'
         ? '.js_list_input[data-store="pack"][data-name="' + name + '"]'
         : '.js_list_input[data-store="' + storeKey + '"]';
@@ -984,20 +1098,22 @@
   }
 
   async function toggleListDone(storeKey, id, name) {
-    if (storeKey === 'pack') {
-      var n = name || findPackNameById(id);
-      var items = state.pack[n] || [];
-      items.forEach(function (it) {
-        if (it.id === id) it.done = !it.done;
-      });
-      await store.set('pack', state.pack);
-    } else {
-      (state[storeKey] || []).forEach(function (it) {
-        if (it.id === id) it.done = !it.done;
-      });
-      await store.set(storeKey, state[storeKey]);
-    }
-    renderList(storeKey);
+    requireWrite(async function () {
+      if (storeKey === 'pack') {
+        var n = name || findPackNameById(id);
+        var items = state.pack[n] || [];
+        items.forEach(function (it) {
+          if (it.id === id) it.done = !it.done;
+        });
+        await store.set('pack', state.pack);
+      } else {
+        (state[storeKey] || []).forEach(function (it) {
+          if (it.id === id) it.done = !it.done;
+        });
+        await store.set(storeKey, state[storeKey]);
+      }
+      renderList(storeKey);
+    });
   }
 
   function findPackNameById(id) {
@@ -1010,38 +1126,42 @@
   }
 
   async function deleteListItem(storeKey, id) {
-    if (storeKey === 'board') {
-      state.board = (state.board || []).filter(function (it) { return it.id !== id; });
-      await store.set('board', state.board);
-      renderList('board');
-      return;
-    }
-    if (storeKey === 'pack') {
-      var n = findPackNameById(id);
-      state.pack[n] = (state.pack[n] || []).filter(function (it) { return it.id !== id; });
-      await store.set('pack', state.pack);
-      renderList('pack');
-      return;
-    }
-    state[storeKey] = (state[storeKey] || []).filter(function (it) { return it.id !== id; });
-    await store.set(storeKey, state[storeKey]);
-    renderList(storeKey);
+    requireWrite(async function () {
+      if (storeKey === 'board') {
+        state.board = (state.board || []).filter(function (it) { return it.id !== id; });
+        await store.set('board', state.board);
+        renderList('board');
+        return;
+      }
+      if (storeKey === 'pack') {
+        var n = findPackNameById(id);
+        state.pack[n] = (state.pack[n] || []).filter(function (it) { return it.id !== id; });
+        await store.set('pack', state.pack);
+        renderList('pack');
+        return;
+      }
+      state[storeKey] = (state[storeKey] || []).filter(function (it) { return it.id !== id; });
+      await store.set(storeKey, state[storeKey]);
+      renderList(storeKey);
+    });
   }
 
   async function updateShopAmount(storeKey, id, value) {
-    var list = state[storeKey] || [];
-    list.forEach(function (it) {
-      if (it.id === id) {
-        if (value === '' || value == null) it.actualAmount = null;
-        else it.actualAmount = Math.max(0, Math.floor(Number(value) || 0));
-      }
+    requireWrite(async function () {
+      var list = state[storeKey] || [];
+      list.forEach(function (it) {
+        if (it.id === id) {
+          if (value === '' || value == null) it.actualAmount = null;
+          else it.actualAmount = Math.max(0, Math.floor(Number(value) || 0));
+        }
+      });
+      await store.set(storeKey, list);
+      renderList(storeKey);
     });
-    await store.set(storeKey, list);
-    renderList(storeKey);
   }
 
   async function postBoard() {
-    requireMe(async function () {
+    requireWrite(async function () {
       var ta = document.querySelector('.js_board_input');
       var text = ta ? ta.value.trim() : '';
       if (!text) return;
@@ -1122,16 +1242,26 @@
 
   async function loadAll() {
     var FRESH_START_V = 6;
+    usingSharedStore = !!(window.NagomiStore && window.NagomiStore.getMode && window.NagomiStore.getMode() === 'supabase');
     var localFresh = 0;
     try {
       localFresh = Number(localStorage.getItem('nagomi_fresh_start_v') || 0);
     } catch (e) { /* ignore */ }
     var sharedFresh = await store.get('freshStart', { v: 0 });
     var sharedV = sharedFresh && typeof sharedFresh === 'object' ? Number(sharedFresh.v || 0) : 0;
-    var needFresh = Math.max(localFresh, sharedV) < FRESH_START_V;
+    var remoteBudgetPeek = usingSharedStore ? await store.get('budget', null) : null;
+    var forceWriteAll = false;
+    var packDirty = false;
+
+    // 共有時: リモートが空のときだけ初期データを書き込む（既存共有データを消さない）
+    // 端末のみ: 従来どおりローカル版番号でフレッシュスタート
+    var needFresh = usingSharedStore
+      ? (sharedV < FRESH_START_V && remoteBudgetPeek == null)
+      : (Math.max(localFresh, sharedV) < FRESH_START_V);
 
     if (needFresh) {
       await applyFreshStartState();
+      forceWriteAll = true;
       try {
         localStorage.setItem('nagomi_fresh_start_v', String(FRESH_START_V));
         localStorage.setItem('nagomi_events_seed_v', '5');
@@ -1140,6 +1270,13 @@
       await store.set('freshStart', { v: FRESH_START_V }, true);
       await store.set('packSeed', { v: 1 }, true);
     } else {
+      if (usingSharedStore && sharedV < FRESH_START_V) {
+        await store.set('freshStart', { v: FRESH_START_V }, true);
+      }
+      try {
+        localStorage.setItem('nagomi_fresh_start_v', String(FRESH_START_V));
+      } catch (e) { /* ignore */ }
+
       state.events = migrateEvents(await store.get('events', DEFAULTS.events));
       state.shared = ensureSharedDefaults(await store.get('shared', DEFAULTS.shared));
       state.konan = ensureKonanDefaults(await store.get('konan', DEFAULTS.konan));
@@ -1151,7 +1288,6 @@
       var shaped = B.ensureBudgetShape(rawBudget);
       state.budget = shaped || B.createDefaultBudget();
 
-      // 持ち物シードを未注入なら一度マージ
       var packSeedLocal = 0;
       try {
         packSeedLocal = Number(localStorage.getItem('nagomi_pack_seed_v') || 0);
@@ -1166,19 +1302,27 @@
         state.shared = ensureSharedDefaults(state.shared);
         try { localStorage.setItem('nagomi_pack_seed_v', '1'); } catch (e) { /* ignore */ }
         await store.set('packSeed', { v: 1 }, true);
+        packDirty = true;
       }
     }
 
-    // persist start / migrated state
-    await store.set('budget', state.budget, true);
-    await store.set('events', state.events, true);
-    await store.set('shared', state.shared, true);
-    await store.set('pack', state.pack, true);
-    await store.set('konan', state.konan, true);
-    await store.set('ropia', state.ropia, true);
-    await store.set('board', state.board, true);
+    // 共有DBを毎回全上書きしない（レースで仲間の更新を潰すのを防ぐ）
+    if (forceWriteAll || !usingSharedStore) {
+      await store.set('budget', state.budget, true);
+      await store.set('events', state.events, true);
+      await store.set('shared', state.shared, true);
+      await store.set('pack', state.pack, true);
+      await store.set('konan', state.konan, true);
+      await store.set('ropia', state.ropia, true);
+      await store.set('board', state.board, true);
+    } else if (packDirty) {
+      await store.set('pack', state.pack, true);
+      await store.set('shared', state.shared, true);
+    }
 
     me = getMe();
+    updateSyncBadge();
+    applyObserverMode();
 
     try {
       var t = B.runSelfTests();
@@ -1269,8 +1413,10 @@
     document.querySelectorAll('.js_name_btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         setMe(btn.getAttribute('data-name'));
+        applyObserverMode();
         renderEvents();
         renderBudget();
+        renderAllLists();
       });
     });
 
@@ -1538,13 +1684,30 @@
   }
 
   /* ---------- boot ---------- */
-  function boot() {
+  async function boot() {
     try { initAnimations(); } catch (e) { console.error(e); }
     try { initFvVideos(); } catch (e) { console.error(e); }
     try { initLifeVideos(); } catch (e) { console.error(e); }
     try { initSecVideos(); } catch (e) { console.error(e); }
     try { bindUI(); } catch (e) { console.error(e); }
-    try { loadAll(); } catch (e) { console.error(e); }
+
+    try {
+      if (window.NagomiStore && typeof window.NagomiStore.init === 'function') {
+        var initRes = await window.NagomiStore.init();
+        window.NagomiStore.onChange(applyRemoteKey);
+        if (initRes && initRes.ok) window.NagomiStore.subscribe();
+        updateSyncBadge(initRes && initRes.ok ? { status: 'CONNECTING' } : null);
+        console.log('[nagomi] store', initRes);
+      }
+    } catch (e) {
+      console.error('[nagomi] store init', e);
+    }
+
+    try {
+      await loadAll();
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   if (document.readyState === 'loading') {
