@@ -4,10 +4,11 @@
 (function (global) {
   'use strict';
 
-  var DATA_VERSION = 5;
+  var DATA_VERSION = 6;
   var INITIAL_DEPOSIT = 20000;
   var ADMIN_NAME = 'けいくん';
 
+  // ゆうじろうくん・彼女キャンセル → 費用負担は9人
   var PARTICIPANTS = [
     { id: 'nagomi-mama', name: '和みママ', ini: 'マ', color: '#c96f4a' },
     { id: 'ken', name: 'けんさん', ini: 'けん', color: '#5a7d54' },
@@ -17,9 +18,7 @@
     { id: 'asa', name: 'アサちゃん', ini: 'ア', color: '#b0568f' },
     { id: 'sumi', name: 'すみちゃん', ini: 'す', color: '#d9a441' },
     { id: 'keichan', name: 'けいちゃん', ini: 'け', color: '#7a5bb0' },
-    { id: 'keikun', name: 'けいくん', ini: 'K', color: '#2277a8' },
-    { id: 'yujiro', name: 'ゆうじろうくん', ini: 'ゆ', color: '#c9536f' },
-    { id: 'yujiro-girlfriend', name: 'ゆうじろうくん彼女', ini: '彼', color: '#b0568f' }
+    { id: 'keikun', name: 'けいくん', ini: 'K', color: '#2277a8' }
   ];
 
   var SPECIAL_MEMBERS = [
@@ -35,23 +34,29 @@
     NAME_TO_ID[p.name] = p.id;
     ID_TO_PARTICIPANT[p.id] = p;
   });
-  // legacy name → id
-  NAME_TO_ID['ゆうじろう彼女'] = 'yujiro-girlfriend';
 
-  var all11 = PARTICIPANTS.map(function (p) { return p.id; });
-  var cottage9 = PARTICIPANTS.filter(function (p) {
-    return p.id !== 'yujiro' && p.id !== 'yujiro-girlfriend';
+  var all9 = PARTICIPANTS.map(function (p) { return p.id; });
+  // 運転手: けんさん / ザッキィー / けいくん
+  var carDrivers = ['ken', 'zacky', 'keikun'];
+  var car6 = PARTICIPANTS.filter(function (p) {
+    return carDrivers.indexOf(p.id) === -1;
   }).map(function (p) { return p.id; });
-  var car8 = PARTICIPANTS.filter(function (p) {
-    return p.id !== 'ken' && p.id !== 'zacky' && p.id !== 'yujiro';
-  }).map(function (p) { return p.id; });
-  var yujiroOnly = ['yujiro'];
+  var kimnyOnly = ['kimny'];
+
+  // 旧キー互換（保存済み支出の allocationType 用）
+  var all11 = all9;
+  var cottage9 = all9;
+  var car8 = car6;
+  var yujiroOnly = [];
 
   var ALLOCATION_LABELS = {
-    all11: '全員11人',
+    all9: '全員9人',
+    all11: '全員9人',
     cottage9: 'コテージ共同組9人',
-    car8: '車代負担者8人',
-    yujiroOnly: 'ゆうじろうくんのみ',
+    car6: '車代負担者6人',
+    car8: '車代負担者6人',
+    kimnyOnly: 'キムニーのみ',
+    yujiroOnly: '（取消・不使用）',
     custom: '個別選択'
   };
 
@@ -133,10 +138,11 @@
   }
 
   function resolveParticipantIds(allocationType, customIds) {
-    if (allocationType === 'all11') return all11.slice();
-    if (allocationType === 'cottage9') return cottage9.slice();
-    if (allocationType === 'car8') return car8.slice();
-    if (allocationType === 'yujiroOnly') return yujiroOnly.slice();
+    if (allocationType === 'all9' || allocationType === 'all11' || allocationType === 'cottage9') {
+      return all9.slice();
+    }
+    if (allocationType === 'car6' || allocationType === 'car8') return car6.slice();
+    if (allocationType === 'kimnyOnly') return kimnyOnly.slice();
     if (allocationType === 'custom') {
       if (!Array.isArray(customIds) || !customIds.length) {
         throw new Error('custom allocation requires at least one participant');
@@ -161,8 +167,8 @@
         title: '6人用コテージ',
         amount: 50160,
         category: 'accommodation',
-        allocationType: 'cottage9',
-        participantIds: cottage9.slice(),
+        allocationType: 'all9',
+        participantIds: all9.slice(),
         paymentSource: 'common-wallet',
         isInitialExpense: true,
         purchaserId: '',
@@ -179,16 +185,16 @@
       },
       {
         id: 'expense-cottage-4-shared',
-        title: '4人用コテージ・共同組',
+        title: '4人用コテージ（ペット可）',
         amount: 29920,
         category: 'accommodation',
-        allocationType: 'cottage9',
-        participantIds: cottage9.slice(),
+        allocationType: 'all9',
+        participantIds: all9.slice(),
         paymentSource: 'common-wallet',
         isInitialExpense: true,
         purchaserId: '',
         receiptUrl: '',
-        memo: '',
+        memo: 'はなちゃん宿泊のコテージ',
         paymentStatus: 'paid',
         createdAt: '2026-07-01T00:00:00+09:00',
         createdBy: ADMIN_NAME,
@@ -203,34 +209,13 @@
         title: 'はなちゃんペット代',
         amount: 1980,
         category: 'pet',
-        allocationType: 'cottage9',
-        participantIds: cottage9.slice(),
+        allocationType: 'kimnyOnly',
+        participantIds: kimnyOnly.slice(),
         paymentSource: 'common-wallet',
         isInitialExpense: true,
-        purchaserId: '',
+        purchaserId: 'kimny',
         receiptUrl: '',
-        memo: '',
-        paymentStatus: 'paid',
-        createdAt: '2026-07-01T00:00:00+09:00',
-        createdBy: ADMIN_NAME,
-        updatedAt: '',
-        updatedBy: '',
-        deletedAt: null,
-        deletedBy: null,
-        advanceSettlementStatus: null
-      },
-      {
-        id: 'expense-cottage-yujiro',
-        title: 'ゆうじろうくん用4人コテージ',
-        amount: 29920,
-        category: 'accommodation',
-        allocationType: 'yujiroOnly',
-        participantIds: yujiroOnly.slice(),
-        paymentSource: 'common-wallet',
-        isInitialExpense: true,
-        purchaserId: '',
-        receiptUrl: '',
-        memo: '',
+        memo: 'キムニーが全額負担',
         paymentStatus: 'paid',
         createdAt: '2026-07-01T00:00:00+09:00',
         createdBy: ADMIN_NAME,
@@ -243,15 +228,15 @@
       {
         id: 'expense-car',
         title: '車代',
-        amount: 32500,
+        amount: 34000,
         category: 'transportation',
-        allocationType: 'car8',
-        participantIds: car8.slice(),
+        allocationType: 'car6',
+        participantIds: car6.slice(),
         paymentSource: 'common-wallet',
         isInitialExpense: true,
         purchaserId: '',
         receiptUrl: '',
-        memo: 'けんさん号12,000 / ザッキィー号10,000 / ゆうじろうくん号10,500',
+        memo: 'けんさん号12,000 / ザッキィー号10,000 / けいくん号12,000',
         paymentStatus: 'paid',
         createdAt: '2026-07-01T00:00:00+09:00',
         createdBy: ADMIN_NAME,
@@ -263,7 +248,7 @@
         breakdown: [
           { label: 'けんさん号', amount: 12000 },
           { label: 'ザッキィー号', amount: 10000 },
-          { label: 'ゆうじろうくん号', amount: 10500 }
+          { label: 'けいくん号', amount: 12000 }
         ]
       }
     ];
@@ -357,8 +342,11 @@
 
   function expenseAllocations(expense) {
     var ids = expense.participantIds && expense.participantIds.length
-      ? expense.participantIds
+      ? expense.participantIds.filter(function (id) { return !!ID_TO_PARTICIPANT[id]; })
       : resolveParticipantIds(expense.allocationType, expense.participantIds);
+    if (!ids.length) {
+      ids = resolveParticipantIds(expense.allocationType, expense.participantIds);
+    }
     return allocateAmount(expense.amount, ids, seedHash(expense.id));
   }
 
@@ -468,8 +456,8 @@
   }
 
   function formatYen(n) {
-    var v = Math.floor(Number(n) || 0);
-    return v.toLocaleString('ja-JP') + '円';
+    var num = Math.round(Number(n) || 0);
+    return num.toLocaleString('ja-JP') + '円';
   }
 
   function previewAllocation(amount, allocationType, customIds, expenseId) {
@@ -493,25 +481,22 @@
       results.push({ name: name, pass: !!cond, detail: detail || '' });
     }
 
-    ok('participants=11', PARTICIPANTS.length === 11);
-    ok('expected=220000', EXPECTED_TOTAL_DEPOSIT === 220000);
-    ok('cottage9=9', cottage9.length === 9);
-    ok('car8=8', car8.length === 8);
-    ok('yujiroOnly=1', yujiroOnly.length === 1);
+    ok('participants=9', PARTICIPANTS.length === 9);
+    ok('expected=180000', EXPECTED_TOTAL_DEPOSIT === 180000);
+    ok('all9=9', all9.length === 9);
+    ok('car6=6', car6.length === 6);
+    ok('kimnyOnly=1', kimnyOnly.length === 1);
 
-    var a1 = allocateAmount(50160, cottage9, seedHash('expense-cottage-6'));
+    var a1 = allocateAmount(50160, all9, seedHash('expense-cottage-6'));
     ok('cottage6 sum', a1.reduce(function (s, x) { return s + x.amount; }, 0) === 50160);
-    ok('cottage6 no yujiro', a1.every(function (x) {
-      return x.participantId !== 'yujiro' && x.participantId !== 'yujiro-girlfriend';
-    }));
 
-    var a2 = allocateAmount(29920, yujiroOnly, 0);
-    ok('yujiro cottage', a2.length === 1 && a2[0].amount === 29920);
+    var aPet = allocateAmount(1980, kimnyOnly, 0);
+    ok('pet kimny', aPet.length === 1 && aPet[0].participantId === 'kimny' && aPet[0].amount === 1980);
 
-    var a3 = allocateAmount(32500, car8, seedHash('expense-car'));
-    ok('car sum', a3.reduce(function (s, x) { return s + x.amount; }, 0) === 32500);
+    var a3 = allocateAmount(34000, car6, seedHash('expense-car'));
+    ok('car sum', a3.reduce(function (s, x) { return s + x.amount; }, 0) === 34000);
     ok('car no drivers', a3.every(function (x) {
-      return x.participantId !== 'ken' && x.participantId !== 'zacky' && x.participantId !== 'yujiro';
+      return carDrivers.indexOf(x.participantId) === -1;
     }));
 
     var budget = createDefaultBudget();
@@ -520,9 +505,10 @@
       budget.deposits[p.id].depositStatus = 'paid';
     });
     var sum = computeWalletSummary(budget);
-    ok('paid total 220000', sum.paidDepositTotal === 220000);
-    ok('expense 144480', sum.expenseTotal === 144480);
-    ok('cash 75520', sum.cashBalance === 75520);
+    ok('paid total 180000', sum.paidDepositTotal === 180000);
+    // 50160 + 29920 + 1980 + 34000 = 116060
+    ok('expense 116060', sum.expenseTotal === 116060);
+    ok('cash 63940', sum.cashBalance === 63940);
 
     var burdenSum = 0;
     Object.keys(sum.people).forEach(function (id) {
@@ -530,6 +516,12 @@
     });
     ok('burden=expense', burdenSum === sum.expenseTotal, burdenSum + ' vs ' + sum.expenseTotal);
     ok('settlementDiff=0', sum.settlementDifference === 0, String(sum.settlementDifference));
+
+    var kimny = sum.people.kimny;
+    ok('kimny has pet', kimny.buckets.cottage >= 1980);
+    ok('ken car=0', sum.people.ken.buckets.car === 0);
+    ok('zacky car=0', sum.people.zacky.buckets.car === 0);
+    ok('keikun car=0', sum.people.keikun.buckets.car === 0);
 
     var failed = results.filter(function (r) { return !r.pass; });
     return { results: results, ok: failed.length === 0, failed: failed };
@@ -567,9 +559,13 @@
     SPECIAL_MEMBERS: SPECIAL_MEMBERS,
     TOTAL_PARTICIPANTS: TOTAL_PARTICIPANTS,
     EXPECTED_TOTAL_DEPOSIT: EXPECTED_TOTAL_DEPOSIT,
+    all9: all9,
     all11: all11,
     cottage9: cottage9,
+    car6: car6,
     car8: car8,
+    carDrivers: carDrivers,
+    kimnyOnly: kimnyOnly,
     yujiroOnly: yujiroOnly,
     ALLOCATION_LABELS: ALLOCATION_LABELS,
     CATEGORY_LABELS: CATEGORY_LABELS,

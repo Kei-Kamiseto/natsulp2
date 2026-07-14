@@ -64,11 +64,11 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=start2">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=nine1">
 
   <script src="./asset/js/vender.js"></script>
-  <script src="./asset/js/nagomi-budget.js?v=start2"></script>
-  <script defer src="./asset/js/app.js?v=start2"></script>
+  <script src="./asset/js/nagomi-budget.js?v=nine1"></script>
+  <script defer src="./asset/js/app.js?v=nine1"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
@@ -669,14 +669,14 @@
                     残金 ＝ 入金額 − 自分の負担額</p>
                   <p><strong>入金</strong><br>
                     目安は1人 20,000円。足りなくなったら、入金額を追加入力できます。</p>
-                  <p><strong>コテージ費（共同9人）</strong><br>
-                    6人用 50,160円 ＋ 共同4人用 29,920円 ＋ ペット代 1,980円 ＝ 82,060円<br>
-                    → ゆうじろうくん・彼女を除く9人でわりかん。</p>
-                  <p><strong>ゆうじろうくんのコテージ</strong><br>
-                    4人用 29,920円は、ゆうじろうくんひとりの負担。</p>
+                  <p><strong>コテージ費（9人）</strong><br>
+                    6人用 50,160円 ＋ 4人用（ペット可）29,920円 ＝ 80,080円<br>
+                    → 参加者9人でわりかん。</p>
+                  <p><strong>はなちゃんペット代</strong><br>
+                    1,980円は、キムニーが全額負担。</p>
                   <p><strong>車代</strong><br>
-                    実費 32,500円（けん12,000／ザッキィー10,000／ゆうじろう10,500）<br>
-                    → 運転手3人以外の8人でわりかん。運転手は0円。</p>
+                    実費 34,000円（けん12,000／ザッキィー10,000／けいくん12,000）<br>
+                    → 運転手3人以外の6人でわりかん。運転手は0円。</p>
                   <p><strong>食材・レンタルなど</strong><br>
                     登録した支出を、選んだメンバーでわりかん（端数の1円は順番に配る）。</p>
                   <p><strong>残金の見方</strong><br>
@@ -825,22 +825,6 @@
                         <button type="button" class="js_list_add" data-store="pack" data-name="けいくん">＋</button>
                       </div>
                     </div>
-                    <div class="pack-card" data-name="ゆうじろうくん">
-                      <h4><span class="av" style="background:#c9536f">ゆ</span>ゆうじろうくん</h4>
-                      <div class="js_list" data-store="pack" data-name="ゆうじろうくん"></div>
-                      <div class="add-row">
-                        <input type="text" class="js_list_input" data-store="pack" data-name="ゆうじろうくん" placeholder="持ち物" autocomplete="off">
-                        <button type="button" class="js_list_add" data-store="pack" data-name="ゆうじろうくん">＋</button>
-                      </div>
-                    </div>
-                    <div class="pack-card" data-name="ゆうじろうくん彼女">
-                      <h4><span class="av" style="background:#b0568f">彼</span>ゆうじろうくん彼女</h4>
-                      <div class="js_list" data-store="pack" data-name="ゆうじろうくん彼女"></div>
-                      <div class="add-row">
-                        <input type="text" class="js_list_input" data-store="pack" data-name="ゆうじろうくん彼女" placeholder="持ち物" autocomplete="off">
-                        <button type="button" class="js_list_add" data-store="pack" data-name="ゆうじろうくん彼女">＋</button>
-                      </div>
-                    </div>
                   </div>
                 </dd>
               </dl>
@@ -923,8 +907,6 @@
         <button type="button" class="js_name_btn" data-name="すみちゃん">すみちゃん</button>
         <button type="button" class="js_name_btn" data-name="けいちゃん">けいちゃん</button>
         <button type="button" class="js_name_btn" data-name="けいくん">けいくん</button>
-        <button type="button" class="js_name_btn" data-name="ゆうじろうくん">ゆうじろうくん</button>
-        <button type="button" class="js_name_btn" data-name="ゆうじろうくん彼女">ゆうじろうくん彼女</button>
         <button type="button" class="js_name_btn -guest" data-name="ゲスト">その他（ゲスト）</button>
       </div>
     </div>
@@ -969,10 +951,9 @@
         </label>
         <label>負担グループ
           <select name="allocationType" id="expense_allocation">
-            <option value="all11">全員11人</option>
-            <option value="cottage9">コテージ共同組9人</option>
-            <option value="car8">車代負担者8人</option>
-            <option value="yujiroOnly">ゆうじろうくんのみ</option>
+            <option value="all9">全員9人</option>
+            <option value="car6">車代負担者6人</option>
+            <option value="kimnyOnly">キムニーのみ</option>
             <option value="custom">個別選択</option>
           </select>
         </label>

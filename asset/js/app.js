@@ -325,7 +325,7 @@
 
     if (hint) {
       hint.textContent =
-        '入金あり ' + sum.paidCount + ' / 11人 ／ みんなの入金合計 ' + B.formatYen(sum.paidDepositTotal);
+        '入金あり ' + sum.paidCount + ' / ' + B.TOTAL_PARTICIPANTS + '人 ／ みんなの入金合計 ' + B.formatYen(sum.paidDepositTotal);
     }
 
     if (expenseEl) {
@@ -490,7 +490,7 @@
 
     var fd = new FormData(form);
     var amount = Math.floor(Number(fd.get('amount')) || 0);
-    var allocationType = String(fd.get('allocationType') || 'all11');
+    var allocationType = String(fd.get('allocationType') || 'all9');
     var expenseId = String(fd.get('expenseId') || editingExpenseId || 'preview');
 
     if (customBox) customBox.hidden = allocationType !== 'custom';
@@ -555,7 +555,7 @@
         form.category.value = expense.category || 'other';
         form.purchaserId.value = expense.purchaserId || '';
         form.paymentSource.value = expense.paymentSource || 'common-wallet';
-        form.allocationType.value = expense.allocationType || 'all11';
+        form.allocationType.value = expense.allocationType || 'all9';
         form.receiptUrl.value = expense.receiptUrl || '';
         form.memo.value = expense.memo || '';
         if (expense.allocationType === 'custom' && expense.participantIds) {
@@ -568,7 +568,7 @@
         if (ttl) ttl.textContent = '支出を登録';
         var myId = B.NAME_TO_ID[getMe()] || '';
         if (myId) form.purchaserId.value = myId;
-        form.allocationType.value = 'all11';
+        form.allocationType.value = 'all9';
         form.paymentSource.value = 'common-wallet';
         form.category.value = 'food';
       }
@@ -601,7 +601,7 @@
       var category = String(fd.get('category') || 'other');
       var purchaserId = String(fd.get('purchaserId') || '');
       var paymentSource = String(fd.get('paymentSource') || 'common-wallet');
-      var allocationType = String(fd.get('allocationType') || 'all11');
+      var allocationType = String(fd.get('allocationType') || 'all9');
       var receiptUrl = String(fd.get('receiptUrl') || '').trim();
       var memo = String(fd.get('memo') || '').trim();
       var expenseId = String(fd.get('expenseId') || editingExpenseId || '');
@@ -759,7 +759,7 @@
         category: storeKey === 'ropia' ? 'food' : 'supplies',
         purchaserId: B.NAME_TO_ID[getMe()] || '',
         paymentSource: 'common-wallet',
-        allocationType: 'all11',
+        allocationType: 'all9',
         receiptUrl: '',
         memo: item.memo || ''
       }, { storeKey: storeKey, itemId: itemId });
@@ -1032,7 +1032,7 @@
   }
 
   async function loadAll() {
-    var FRESH_START_V = 5;
+    var FRESH_START_V = 6;
     var localFresh = 0;
     try {
       localFresh = Number(localStorage.getItem('nagomi_fresh_start_v') || 0);
