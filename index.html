@@ -1015,8 +1015,13 @@
 
   <script>
   (function () {
-    /* Countdown → 2026-07-26T09:30:00+09:00 / 当日到達後は Let’s Enjoy! */
+    /* Countdown → 2026-07-26T09:30:00+09:00 / 当日到達後は Let’s Enjoy!
+       確認用: ?enjoy=1 で当日表示をプレビュー */
     var target = new Date('2026-07-26T09:30:00+09:00').getTime();
+    var forceEnjoy = false;
+    try {
+      forceEnjoy = new URLSearchParams(location.search).get('enjoy') === '1';
+    } catch (e) { /* ignore */ }
     function pad(n) { return String(n).padStart(2, '0'); }
     function tick() {
       var now = Date.now();
@@ -1026,7 +1031,7 @@
       var badge = root.closest('.badge');
       var remain = root.querySelector('.count-remain');
       var enjoy = root.querySelector('.count-enjoy');
-      var isDay = diff <= 0;
+      var isDay = forceEnjoy || diff <= 0;
 
       root.classList.toggle('is-day', isDay);
       root.classList.toggle('-remain', !isDay);
