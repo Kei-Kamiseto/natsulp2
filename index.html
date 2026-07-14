@@ -72,14 +72,14 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=obs5">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=day1">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./asset/js/supabase-config.js?v=obs5"></script>
-  <script src="./asset/js/nagomi-store.js?v=obs5"></script>
+  <script src="./asset/js/supabase-config.js?v=day1"></script>
+  <script src="./asset/js/nagomi-store.js?v=day1"></script>
   <script src="./asset/js/vender.js"></script>
-  <script src="./asset/js/nagomi-budget.js?v=obs5"></script>
-  <script defer src="./asset/js/app.js?v=obs5"></script>
+  <script src="./asset/js/nagomi-budget.js?v=day1"></script>
+  <script defer src="./asset/js/app.js?v=day1"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
@@ -129,17 +129,23 @@
           <div class="badge m_box_badge js_anim_load -anim04">
             <h3 class="hd nagomi-badge-hd">合宿まで</h3>
             <div id="countdown" class="nagomi-count -remain" aria-live="polite">
-              <p class="remain-label">あと</p>
-              <p class="remain">
-                <em class="digit" data-unit="days">--</em><span class="unit">日</span>
-              </p>
-              <p class="remain-time">
-                <span class="t"><span data-unit="hours">--</span><small>時間</small></span>
-                <span class="colon" aria-hidden="true">:</span>
-                <span class="t"><span data-unit="min">--</span><small>分</small></span>
-                <span class="colon" aria-hidden="true">:</span>
-                <span class="t"><span data-unit="sec">--</span><small>秒</small></span>
-              </p>
+              <div class="count-remain">
+                <p class="remain-label">あと</p>
+                <p class="remain">
+                  <em class="digit" data-unit="days">--</em><span class="unit">日</span>
+                </p>
+                <p class="remain-time">
+                  <span class="t"><span data-unit="hours">--</span><small>時間</small></span>
+                  <span class="colon" aria-hidden="true">:</span>
+                  <span class="t"><span data-unit="min">--</span><small>分</small></span>
+                  <span class="colon" aria-hidden="true">:</span>
+                  <span class="t"><span data-unit="sec">--</span><small>秒</small></span>
+                </p>
+              </div>
+              <div class="count-enjoy" hidden>
+                <p class="enjoy-line">Let’s</p>
+                <p class="enjoy-main">Enjoy!</p>
+              </div>
             </div>
           </div>
 
@@ -1009,18 +1015,31 @@
 
   <script>
   (function () {
-    /* Countdown → 2026-07-26T09:30:00+09:00 */
+    /* Countdown → 2026-07-26T09:30:00+09:00 / 当日到達後は Let’s Enjoy! */
     var target = new Date('2026-07-26T09:30:00+09:00').getTime();
     function pad(n) { return String(n).padStart(2, '0'); }
     function tick() {
       var now = Date.now();
       var diff = Math.max(0, target - now);
+      var root = document.getElementById('countdown');
+      if (!root) return;
+      var badge = root.closest('.badge');
+      var remain = root.querySelector('.count-remain');
+      var enjoy = root.querySelector('.count-enjoy');
+      var isDay = diff <= 0;
+
+      root.classList.toggle('is-day', isDay);
+      root.classList.toggle('-remain', !isDay);
+      if (badge) badge.classList.toggle('is-day', isDay);
+      if (remain) remain.hidden = isDay;
+      if (enjoy) enjoy.hidden = !isDay;
+
+      if (isDay) return;
+
       var days = Math.floor(diff / 86400000);
       var hours = Math.floor((diff % 86400000) / 3600000);
       var min = Math.floor((diff % 3600000) / 60000);
       var sec = Math.floor((diff % 60000) / 1000);
-      var root = document.getElementById('countdown');
-      if (!root) return;
       var d = root.querySelector('[data-unit="days"]');
       var h = root.querySelector('[data-unit="hours"]');
       var m = root.querySelector('[data-unit="min"]');

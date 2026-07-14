@@ -171,6 +171,52 @@
   line-height:1;
 }
 
+/* 当日：吹き出し内 Let’s / Enjoy! */
+#page_top #fv .badge.is-day .hd.nagomi-badge-hd{
+  opacity:0;
+}
+#page_top #fv .badge #countdown.nagomi-count.is-day{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.15rem;
+  width:100%;
+  padding:.4rem .8rem 0;
+  text-align:center;
+  color:#333;
+}
+#page_top #fv .badge #countdown .count-enjoy{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.1rem;
+  width:100%;
+}
+#page_top #fv .badge #countdown .count-enjoy[hidden]{
+  display:none !important;
+}
+#page_top #fv .badge #countdown .count-enjoy .enjoy-line{
+  margin:0;
+  font-family:Outfit,sans-serif;
+  font-size:2.2rem;
+  font-weight:700;
+  letter-spacing:.12em;
+  line-height:1.1;
+  color:#333;
+}
+#page_top #fv .badge #countdown .count-enjoy .enjoy-main{
+  margin:0;
+  font-family:Outfit,sans-serif;
+  font-size:clamp(2.8rem, 8vw, 4.4rem);
+  font-weight:700;
+  letter-spacing:.04em;
+  line-height:1;
+  white-space:nowrap;
+  color:#333;
+}
+
 /* #link 内動画（PC） */
 @media screen and (min-width:768px){
   #page_top #link .img{
@@ -1084,6 +1130,13 @@ body.is-observer .js_join_btn.is-readonly{
   #page_top #fv .badge #countdown.nagomi-count.-remain .remain-time .colon{
     font-size:1.3rem;
     margin-top:.1rem;
+  }
+  #page_top #fv .badge #countdown .count-enjoy .enjoy-line{
+    font-size:1.6rem;
+    letter-spacing:.1em;
+  }
+  #page_top #fv .badge #countdown .count-enjoy .enjoy-main{
+    font-size:clamp(2.6rem, 11vw, 3.6rem);
   }
   #page_top #fv .linkArea{
     position:relative !important;
