@@ -46,6 +46,95 @@
     return o;
   }
 
+  function packItem(text) {
+    return {
+      id: 'pack-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+      text: text,
+      done: false,
+      by: '準備係'
+    };
+  }
+
+  function makeDefaultPack() {
+    var pack = emptyPack();
+    var seed = {
+      'けいちゃん': [
+        'テーブル 120cm × 60cm：2台',
+        '椅子：4脚',
+        'クーラーボックス 40cm × 25cm × 25cm：1個',
+        'タープ：1張',
+        'ランタン：2個'
+      ],
+      'けいくん': [
+        '大型クーラーボックス：1個',
+        'まな板',
+        '包丁',
+        'ウロコ取り',
+        '着火バーナー：1個'
+      ],
+      'けんさん': [
+        '椅子：2脚',
+        '個人用のお酒を入れた手提げドリンクバッグ'
+      ],
+      'キムニー': [
+        '椅子：4脚',
+        'リュック'
+      ],
+      'ザッキィー': [
+        '車内飲み物用の保冷バッグ',
+        '保冷剤',
+        '個人の手荷物'
+      ],
+      '和みママ': [
+        'ボストンバッグ：1個予定'
+      ]
+    };
+    Object.keys(seed).forEach(function (name) {
+      pack[name] = seed[name].map(packItem);
+    });
+    return pack;
+  }
+
+  function makeDefaultShared() {
+    return [
+      '各自の2日分の飲み物',
+      '各自のリュック、バッグ、手荷物',
+      '各自の個人用荷物'
+    ].map(packItem);
+  }
+
+  function mergeListByText(existing, defaults) {
+    var out = (existing || []).slice();
+    var have = {};
+    out.forEach(function (it) {
+      if (it && it.text) have[String(it.text)] = true;
+    });
+    (defaults || []).forEach(function (it) {
+      if (!it || !it.text || have[it.text]) return;
+      out.push({
+        id: it.id || uid(),
+        text: it.text,
+        done: !!it.done,
+        by: it.by || '準備係'
+      });
+      have[it.text] = true;
+    });
+    return out;
+  }
+
+  function ensurePackDefaults(pack) {
+    var base = migratePack(pack);
+    var seeded = makeDefaultPack();
+    ALL11.forEach(function (name) {
+      base[name] = mergeListByText(base[name] || [], seeded[name] || []);
+    });
+    return base;
+  }
+
+  function ensureSharedDefaults(list) {
+    return mergeListByText(list || [], makeDefaultShared());
+  }
+
   var DEFAULTS = {
     events: {
       sup: [],
@@ -55,10 +144,10 @@
       fireworks: [],
       cards: []
     },
-    shared: [],
+    shared: makeDefaultShared(),
     konan: makeShopDefaults(B.DEFAULT_KONAN, 'konan'),
     ropia: makeShopDefaults(B.DEFAULT_ROPIA, 'ropia'),
-    pack: emptyPack(),
+    pack: makeDefaultPack(),
     board: [],
     budget: null
   };
@@ -1009,10 +1098,10 @@
   /* ---------- Load & bind ---------- */
   async function applyFreshStartState() {
     state.events = emptyEvents();
-    state.shared = [];
+    state.shared = makeDefaultShared();
     state.konan = ensureKonanDefaults(DEFAULTS.konan.slice());
     state.ropia = DEFAULTS.ropia.slice();
-    state.pack = emptyPack();
+    state.pack = makeDefaultPack();
     state.board = [];
     state.budget = B.createDefaultBudget();
     // 念のため入金を明示ゼロ、追加支出は除去
@@ -1046,19 +1135,38 @@
       try {
         localStorage.setItem('nagomi_fresh_start_v', String(FRESH_START_V));
         localStorage.setItem('nagomi_events_seed_v', '5');
+        localStorage.setItem('nagomi_pack_seed_v', '1');
       } catch (e) { /* ignore */ }
       await store.set('freshStart', { v: FRESH_START_V }, true);
+      await store.set('packSeed', { v: 1 }, true);
     } else {
       state.events = migrateEvents(await store.get('events', DEFAULTS.events));
-      state.shared = await store.get('shared', DEFAULTS.shared);
+      state.shared = ensureSharedDefaults(await store.get('shared', DEFAULTS.shared));
       state.konan = ensureKonanDefaults(await store.get('konan', DEFAULTS.konan));
       state.ropia = normalizeShopList(await store.get('ropia', DEFAULTS.ropia), 'ropia');
-      state.pack = migratePack(await store.get('pack', DEFAULTS.pack));
+      state.pack = ensurePackDefaults(await store.get('pack', DEFAULTS.pack));
       state.board = await store.get('board', DEFAULTS.board);
 
       var rawBudget = await store.get('budget', null);
       var shaped = B.ensureBudgetShape(rawBudget);
       state.budget = shaped || B.createDefaultBudget();
+
+      // 持ち物シードを未注入なら一度マージ
+      var packSeedLocal = 0;
+      try {
+        packSeedLocal = Number(localStorage.getItem('nagomi_pack_seed_v') || 0);
+      } catch (e) { /* ignore */ }
+      var packSeedShared = await store.get('packSeed', { v: 0 });
+      var packSeedV = Math.max(
+        packSeedLocal,
+        packSeedShared && typeof packSeedShared === 'object' ? Number(packSeedShared.v || 0) : 0
+      );
+      if (packSeedV < 1) {
+        state.pack = ensurePackDefaults(state.pack);
+        state.shared = ensureSharedDefaults(state.shared);
+        try { localStorage.setItem('nagomi_pack_seed_v', '1'); } catch (e) { /* ignore */ }
+        await store.set('packSeed', { v: 1 }, true);
+      }
     }
 
     // persist start / migrated state
