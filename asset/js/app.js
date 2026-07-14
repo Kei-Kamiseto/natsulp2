@@ -317,7 +317,8 @@
   }
 
   function isObserver() {
-    return getMe() === OBSERVER_NAME;
+    var name = getMe();
+    return name === OBSERVER_NAME || name === 'ゲスト';
   }
 
   function canWrite() {
@@ -339,7 +340,7 @@
   function requireWrite(thenFn) {
     requireMe(function () {
       if (isObserver()) {
-        alert('オブザーバ―は閲覧のみです。入力・更新はできません。');
+        alert('ゲスト／オブザーバ―は閲覧のみです。入力・更新はできません。');
         return;
       }
       thenFn();
@@ -381,8 +382,8 @@
     if (pendingAction) {
       var fn = pendingAction;
       pendingAction = null;
-      if (name === OBSERVER_NAME) {
-        alert('オブザーバ―は閲覧のみです。入力・更新はできません。');
+      if (name === OBSERVER_NAME || name === 'ゲスト') {
+        alert('ゲスト／オブザーバ―は閲覧のみです。入力・更新はできません。');
         return;
       }
       fn();
