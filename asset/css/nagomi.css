@@ -246,6 +246,49 @@
   object-fit:cover;
 }
 
+#page_top .nagomi-shortcut{
+  margin:4rem 0 1rem;
+}
+#page_top .nagomi-shortcut .m_box_fixed{
+  max-width:96rem;
+}
+#page_top .nagomi-shortcut-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1.6rem;
+  padding:1.6rem 2rem;
+  border:.2rem solid #333;
+  border-radius:1.6rem;
+  background:#fff7dc;
+  box-shadow:.6rem .6rem 0 rgba(73,180,215,.35);
+}
+#page_top .nagomi-shortcut-card .eyebrow{
+  flex:0 0 auto;
+  margin:0;
+  font-size:1.35rem;
+  font-weight:700;
+  letter-spacing:.12em;
+  color:#1f7f9f;
+}
+#page_top .nagomi-shortcut-card .txt{
+  flex:1 1 auto;
+  margin:0;
+  font-size:1.35rem;
+  line-height:1.6;
+  letter-spacing:.04em;
+}
+#page_top .nagomi-shortcut-card button{
+  flex:0 0 auto;
+  width:auto;
+  padding:.9rem 1.4rem;
+  border:.2rem solid #333;
+  border-radius:999rem;
+  background:#deeef5;
+  font-weight:700;
+  text-align:center;
+}
+
 /* #link 手書き見出し枠（出会い等の画像の代わり） */
 #page_top #link h3.nagomi-link-hd{
   display:flex;
@@ -2283,6 +2326,32 @@ html{
   font-weight:700;
   text-align:right;
 }
+#page_top #campaign .nagomi-cost-details{
+  list-style:none;
+  margin:.8rem 0 0;
+  padding:.8rem 0 0;
+  border-top:.1rem solid #e2e2e2;
+}
+#page_top #campaign .nagomi-cost-details li{
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.55rem 0;
+  font-size:1.35rem;
+  line-height:1.45;
+  color:#4b4b4b;
+}
+#page_top #campaign .nagomi-cost-details span{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+#page_top #campaign .nagomi-cost-details em{
+  flex:0 0 auto;
+  font-style:normal;
+  font-family:Outfit,sans-serif;
+  font-weight:700;
+  text-align:right;
+}
 #page_top #campaign .nagomi-remain{
   margin:1.4rem 0 1rem;
   padding:1.2rem 1.4rem;
@@ -2304,6 +2373,29 @@ html{
 #page_top #campaign .nagomi-remain.is-zero{
   background:#f0f0f0;
   color:#555;
+}
+
+@media screen and (max-width:767px){
+  #page_top .nagomi-shortcut{
+    margin:2.4rem 0 .4rem;
+  }
+  #page_top .nagomi-shortcut .m_box_fixed{
+    padding:0 1.6rem;
+  }
+  #page_top .nagomi-shortcut-card{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:.8rem;
+    padding:1.4rem 1.5rem;
+    box-shadow:.35rem .35rem 0 rgba(73,180,215,.35);
+  }
+  #page_top .nagomi-shortcut-card .txt{
+    font-size:1.25rem;
+  }
+  #page_top .nagomi-shortcut-card button{
+    width:100%;
+    text-align:center;
+  }
 }
 #page_top #campaign .nagomi-paid-toggle,
 #page_top #campaign .nagomi-paid-state{

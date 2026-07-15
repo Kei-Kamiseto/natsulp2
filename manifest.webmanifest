@@ -1,0 +1,24 @@
+{
+  "name": "和みの大人夏合宿 2026",
+  "short_name": "和み夏合宿",
+  "description": "和みの大人夏合宿 2026 の共有LPです。",
+  "start_url": "/natsulp2/",
+  "scope": "/natsulp2/",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#49b4d7",
+  "icons": [
+    {
+      "src": "./asset/img/apple-touch-icon.webp",
+      "sizes": "180x180",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "./asset/img/favicon.webp",
+      "sizes": "32x32",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}

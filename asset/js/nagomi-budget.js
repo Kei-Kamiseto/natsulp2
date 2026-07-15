@@ -340,6 +340,12 @@
     });
   }
 
+  function paidExpenses(budget) {
+    return activeExpenses(budget).filter(function (e) {
+      return e.paymentStatus === 'paid';
+    });
+  }
+
   function expenseAllocations(expense) {
     var ids = expense.participantIds && expense.participantIds.length
       ? expense.participantIds.filter(function (id) { return !!ID_TO_PARTICIPANT[id]; })
@@ -391,6 +397,8 @@
           amount: expense.amount,
           category: expense.category,
           bucket: bucket,
+          isInitialExpense: !!expense.isInitialExpense,
+          paymentSource: expense.paymentSource || 'common-wallet',
           allocationType: expense.allocationType,
           allocationLabel: ALLOCATION_LABELS[expense.allocationType] || expense.allocationType,
           participantCount: expense.participantIds.length,
@@ -432,7 +440,7 @@
       if (row.paidDeposit > 0) paidCount++;
     });
 
-    var expenseTotal = paidWalletExpenses(budget).reduce(function (s, e) {
+    var expenseTotal = paidExpenses(budget).reduce(function (s, e) {
       return s + e.amount;
     }, 0);
 
@@ -516,6 +524,36 @@
     });
     ok('burden=expense', burdenSum === sum.expenseTotal, burdenSum + ' vs ' + sum.expenseTotal);
     ok('settlementDiff=0', sum.settlementDifference === 0, String(sum.settlementDifference));
+
+    budget.expenses.push({
+      id: 'expense-test-charcoal',
+      title: 'ジャパン（炭）',
+      amount: 1097,
+      category: 'other',
+      allocationType: 'all9',
+      participantIds: all9.slice(),
+      paymentSource: 'personal-advance',
+      isInitialExpense: false,
+      purchaserId: 'nagomi-mama',
+      receiptUrl: '',
+      memo: '',
+      paymentStatus: 'paid',
+      createdAt: '2026-07-15T00:00:00+09:00',
+      createdBy: ADMIN_NAME,
+      updatedAt: '',
+      updatedBy: '',
+      deletedAt: null,
+      deletedBy: null,
+      advanceSettlementStatus: 'unsettled'
+    });
+    var sumWithAdvance = computeWalletSummary(budget);
+    ok('expense includes personal advance', sumWithAdvance.expenseTotal === 117157, sumWithAdvance.expenseTotal);
+    ok(
+      'breakdown keeps expense title',
+      sumWithAdvance.people['nagomi-mama'].breakdown.some(function (x) {
+        return x.title === 'ジャパン（炭）' && !x.isInitialExpense && x.personalAmount > 0;
+      })
+    );
 
     var kimny = sum.people.kimny;
     ok('kimny has pet', kimny.buckets.cottage >= 1980);

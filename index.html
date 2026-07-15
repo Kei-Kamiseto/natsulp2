@@ -61,10 +61,14 @@
   <meta name="twitter:image" content="https://kei-kamiseto.github.io/natsulp2/asset/img/nagomi/venue.jpg">
 
   <meta name="thumbnail" content="https://kei-kamiseto.github.io/natsulp2/asset/img/nagomi/venue.jpg" />
+  <meta name="theme-color" content="#49b4d7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="和み夏合宿">
   <link rel="apple-touch-icon" sizes="180x180" href="./asset/img/apple-touch-icon.webp">
   <link rel="icon" type="image/webp" sizes="32x32" href="./asset/img/favicon.webp">
   <link rel="icon" type="image/webp" sizes="16x16" href="./asset/img/favicon.webp">
   <link rel="shortcut icon" href="./asset/img/favicon.ico">
+  <link rel="manifest" href="./manifest.webmanifest">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,15 +79,15 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=day2">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=money1">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./asset/js/supabase-config.js?v=day2"></script>
-  <script src="./asset/js/nagomi-store.js?v=day2"></script>
+  <script src="./asset/js/supabase-config.js?v=money1"></script>
+  <script src="./asset/js/nagomi-store.js?v=money1"></script>
   <script src="./asset/js/vender.js"></script>
-  <script src="./asset/js/nagomi-budget.js?v=day2"></script>
-  <script src="./asset/js/countdown.js?v=day2"></script>
-  <script defer src="./asset/js/app.js?v=day2"></script>
+  <script src="./asset/js/nagomi-budget.js?v=money1"></script>
+  <script src="./asset/js/countdown.js?v=money1"></script>
+  <script defer src="./asset/js/app.js?v=money1"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
@@ -268,6 +272,16 @@
         </div>
       </section>
       <!-- /#intro -->
+
+      <section id="quick_access" class="nagomi-shortcut js_anim_scroll -fadein">
+        <div class="m_box_fixed">
+          <div class="nagomi-shortcut-card">
+            <p class="eyebrow">次回すぐ開くには</p>
+            <p class="txt">スマホの共有ボタンから「ホーム画面に追加」しておくと、アプリみたいにすぐ開けます。</p>
+            <button type="button" class="js_copy_url">URLをコピー</button>
+          </div>
+        </div>
+      </section>
 
       <!-- #link -->
       <section id="link">

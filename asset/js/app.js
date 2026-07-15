@@ -502,6 +502,25 @@
     );
   }
 
+  function additionalCostLinesHTML(row) {
+    var list = (row.breakdown || []).filter(function (item) {
+      return !item.isInitialExpense && item.personalAmount > 0;
+    });
+    if (!list.length) return '';
+    return (
+      '<ul class="nagomi-cost-details" aria-label="追加支出の内訳">' +
+        list.map(function (item) {
+          return (
+            '<li>' +
+              '<span>追加：' + escapeHTML(item.title || '（無題）') + '</span>' +
+              '<em>' + B.formatYen(item.personalAmount) + '</em>' +
+            '</li>'
+          );
+        }).join('') +
+      '</ul>'
+    );
+  }
+
   function renderBudget() {
     var el = document.getElementById('budget_people');
     var hint = document.getElementById('budget_hint');
@@ -611,6 +630,7 @@
         : (
           '<p class="nagomi-deposit-line"><span>入金</span><strong>' + B.formatYen(paid) + '</strong></p>'
         );
+      var additionalLines = additionalCostLinesHTML(row);
 
       return (
         '<article class="nagomi-simple-card" data-id="' + p.id + '">' +
@@ -621,8 +641,9 @@
             '<li><span>食材費</span><em>' + B.formatYen(b.food) + '</em></li>' +
             '<li><span>レンタル費</span><em>' + B.formatYen(b.rental) + '</em></li>' +
             '<li><span>車代</span><em>' + B.formatYen(b.car) + '</em></li>' +
-            (b.other ? '<li><span>その他</span><em>' + B.formatYen(b.other) + '</em></li>' : '') +
+            (b.other && !additionalLines ? '<li><span>その他</span><em>' + B.formatYen(b.other) + '</em></li>' : '') +
           '</ul>' +
+          additionalLines +
           '<p class="nagomi-remain ' + remainClass + '">' + remainLabel + '</p>' +
         '</article>'
       );
@@ -1473,6 +1494,23 @@
 
     var boardBtn = document.querySelector('.js_board_post');
     if (boardBtn) boardBtn.addEventListener('click', postBoard);
+
+    var copyBtn = document.querySelector('.js_copy_url');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async function () {
+        var url = 'https://kei-kamiseto.github.io/natsulp2/';
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(url);
+            toast('URLをコピーしました ✓');
+          } else {
+            window.prompt('このURLをコピーしてください', url);
+          }
+        } catch (err) {
+          window.prompt('このURLをコピーしてください', url);
+        }
+      });
+    }
 
     bindBudgetUI();
   }
