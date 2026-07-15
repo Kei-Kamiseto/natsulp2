@@ -2233,21 +2233,6 @@ html{
   color:#666;
   letter-spacing:.03em;
 }
-#page_top #campaign .nagomi-wallet-remain-sub span{
-  display:inline-block;
-  margin:.15rem .35rem;
-  white-space:nowrap;
-}
-#page_top #campaign .nagomi-wallet-remain.is-total{
-  background:#eef8fc;
-  color:#1f7f9f;
-}
-#page_top #campaign .nagomi-wallet-remain.is-total .nagomi-wallet-remain-value{
-  color:#333;
-}
-#page_top #campaign .nagomi-wallet-remain.is-total .nagomi-wallet-remain-sub{
-  color:#4b5f66;
-}
 #page_top #campaign .nagomi-wallet-remain.is-plus{
   background:#e7f6ea;
   color:#2f7d4a;
