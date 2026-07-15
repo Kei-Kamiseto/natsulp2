@@ -79,15 +79,15 @@
   <link rel="stylesheet" href="./asset/css/setting.css">
   <link rel="stylesheet" href="./asset/css/layout.css">
   <link rel="stylesheet" href="./asset/css/style.css">
-  <link rel="stylesheet" href="./asset/css/nagomi.css?v=ledger8">
+  <link rel="stylesheet" href="./asset/css/nagomi.css?v=ledger9">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./asset/js/supabase-config.js?v=ledger8"></script>
-  <script src="./asset/js/nagomi-store.js?v=ledger8"></script>
+  <script src="./asset/js/supabase-config.js?v=ledger9"></script>
+  <script src="./asset/js/nagomi-store.js?v=ledger9"></script>
   <script src="./asset/js/vender.js"></script>
-  <script src="./asset/js/nagomi-budget.js?v=ledger8"></script>
-  <script src="./asset/js/countdown.js?v=ledger8"></script>
-  <script defer src="./asset/js/app.js?v=ledger8"></script>
+  <script src="./asset/js/nagomi-budget.js?v=ledger9"></script>
+  <script src="./asset/js/countdown.js?v=ledger9"></script>
+  <script defer src="./asset/js/app.js?v=ledger9"></script>
   <script>
     // 初回描画で真っ白にならないよう保険
     window.addEventListener('DOMContentLoaded', function () {
@@ -705,9 +705,9 @@
                 <summary>計算のルール（ここを開く）</summary>
                 <div class="nagomi-rules-body">
                   <p><strong>1. 上の大きい残金</strong><br>
-                    入金分の残金 ＝ みんなの入金合計 − 入金分から払った支出。<br>
+                    残金 ＝ みんなの入金合計 − 支出合計（入金分から払った支出 ＋ 個人立替）。<br>
                     まだ誰も入金していない間はマイナスです。みんなが入金すると、その分だけ残金が増えます。<br>
-                    ※個人立替はここから引きません。各メンバーの「立替」に表示します。</p>
+                    個人立替も全体の支出なので、上の残金では支出合計に含めます。</p>
                   <p><strong>2. 各メンバーの残金</strong><br>
                     残金 ＝ 入金額 ＋ その人の個人立替 − その人の負担額。<br>
                     プラスは戻ってくる見込み、マイナスはあとで払う見込み、ゼロはぴったりです。</p>

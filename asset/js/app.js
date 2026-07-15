@@ -563,11 +563,11 @@
     var focusSelStart = focusId && typeof active.selectionStart === 'number' ? active.selectionStart : null;
     var focusSelEnd = focusId && typeof active.selectionEnd === 'number' ? active.selectionEnd : null;
 
-    var cash = sum.cashBalance;
+    var cash = sum.paidDepositTotal - sum.expenseTotal;
     var cashClass = cash > 0 ? 'is-plus' : (cash < 0 ? 'is-minus' : 'is-zero');
     var cashLabel = cash > 0
-      ? '入金分の残金（余り）'
-      : (cash < 0 ? '入金分の残金（不足）' : '入金分の残金');
+      ? '残金（余り）'
+      : (cash < 0 ? '残金（不足）' : '残金');
 
     if (walletEl) {
       walletEl.className = 'nagomi-wallet-remain ' + cashClass;
@@ -575,8 +575,9 @@
         '<p class="nagomi-wallet-remain-label">' + cashLabel + '</p>' +
         '<p class="nagomi-wallet-remain-value">' + B.formatYen(cash) + '</p>' +
         '<p class="nagomi-wallet-remain-sub">入金合計 ' + B.formatYen(sum.paidDepositTotal) +
-          ' − 入金分支出 ' + B.formatYen(sum.walletExpenseTotal) +
-          ' ／ 個人立替は各メンバーの「立替」に表示</p>';
+          ' − 支出合計 ' + B.formatYen(sum.expenseTotal) +
+          '（入金分 ' + B.formatYen(sum.walletExpenseTotal) +
+          ' ／ 個人立替 ' + B.formatYen(sum.personalAdvanceTotal) + '）</p>';
     }
 
     if (hint) {
