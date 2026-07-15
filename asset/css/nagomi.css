@@ -1001,6 +1001,8 @@ body.is-observer .js_del,
 body.is-observer .js_board_post,
 body.is-observer .js_board_input,
 body.is-observer .js_shop_amount,
+body.is-observer .js_shop_purchaser,
+body.is-observer .js_shop_payment,
 body.is-observer .js_shop_expense,
 body.is-observer .js_shop_to_expense,
 body.is-observer .js_expense_edit,
@@ -1903,6 +1905,34 @@ body.is-observer .js_join_btn.is-readonly{
   padding:.6rem .8rem;
   background:#fff;
 }
+#page_top #campaign .nagomi-shop-controls{
+  flex-basis:100%;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.7rem;
+}
+#page_top #campaign .nagomi-shop-field{
+  display:flex;
+  flex-direction:column;
+  gap:.35rem;
+  font-size:1.15rem;
+  font-weight:700;
+  color:#555;
+}
+#page_top #campaign .nagomi-shop-field select{
+  width:100%;
+  border:.15rem solid #333;
+  border-radius:.8rem;
+  padding:.55rem .7rem;
+  background:#fff;
+  font-size:1.25rem;
+  color:#333;
+}
+#page_top #campaign .nagomi-shop-field select:disabled,
+#page_top #campaign .nagomi-shop-amt input:disabled{
+  opacity:.65;
+  background:#eee;
+}
 #page_top #campaign .nagomi-pill{
   display:inline-flex;
   padding:.4rem 1rem;
@@ -2307,6 +2337,13 @@ html{
   font-family:Outfit,sans-serif;
   font-size:2.2rem;
 }
+#page_top #campaign .nagomi-card-section-title{
+  margin:1.1rem 0 .4rem;
+  font-size:1.25rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  color:#1f7f9f;
+}
 #page_top #campaign .nagomi-cost-lines{
   list-style:none;
   margin:0;
@@ -2352,6 +2389,42 @@ html{
   font-weight:700;
   text-align:right;
 }
+#page_top #campaign .nagomi-advance-box{
+  margin-top:1rem;
+  padding-top:.2rem;
+}
+#page_top #campaign .nagomi-advance-lines{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+#page_top #campaign .nagomi-advance-lines li{
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.65rem 0;
+  border-bottom:1px dashed #ddd;
+  font-size:1.4rem;
+}
+#page_top #campaign .nagomi-advance-lines span{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+#page_top #campaign .nagomi-advance-lines em{
+  flex:0 0 auto;
+  font-style:normal;
+  font-family:Outfit,sans-serif;
+  font-weight:700;
+  text-align:right;
+  color:#2f7d4a;
+}
+#page_top #campaign .nagomi-advance-empty{
+  margin:0;
+  padding:.65rem 0;
+  border-bottom:1px dashed #ddd;
+  font-size:1.35rem;
+  color:#777;
+}
 #page_top #campaign .nagomi-remain{
   margin:1.4rem 0 1rem;
   padding:1.2rem 1.4rem;
@@ -2395,6 +2468,9 @@ html{
   #page_top .nagomi-shortcut-card button{
     width:100%;
     text-align:center;
+  }
+  #page_top #campaign .nagomi-shop-controls{
+    grid-template-columns:1fr;
   }
 }
 #page_top #campaign .nagomi-paid-toggle,

@@ -346,6 +346,12 @@
     });
   }
 
+  function personalAdvanceExpenses(budget) {
+    return activeExpenses(budget).filter(function (e) {
+      return e.paymentSource === 'personal-advance' && e.paymentStatus === 'paid';
+    });
+  }
+
   function expenseAllocations(expense) {
     var ids = expense.participantIds && expense.participantIds.length
       ? expense.participantIds.filter(function (id) { return !!ID_TO_PARTICIPANT[id]; })
@@ -365,6 +371,7 @@
         name: p.name,
         expectedDeposit: INITIAL_DEPOSIT,
         paidDeposit: dep ? dep.paidDeposit : 0,
+        advancePaid: 0,
         depositStatus: dep ? dep.depositStatus : 'unpaid',
         actualBurden: 0,
         settlementBalance: 0,
@@ -372,6 +379,7 @@
         additionalAmount: 0,
         settlementStatus: (budget.settlements[p.id] && budget.settlements[p.id].settlementStatus) || 'unsettled',
         breakdown: [],
+        advances: [],
         buckets: {
           cottage: 0,
           food: 0,
@@ -384,6 +392,17 @@
 
     activeExpenses(budget).forEach(function (expense) {
       if (expense.paymentStatus !== 'paid') return;
+      if (expense.paymentSource === 'personal-advance' && expense.purchaserId && map[expense.purchaserId]) {
+        map[expense.purchaserId].advancePaid += expense.amount;
+        map[expense.purchaserId].advances.push({
+          expenseId: expense.id,
+          title: expense.title,
+          amount: expense.amount,
+          category: expense.category,
+          participantCount: expense.participantIds.length,
+          createdAt: expense.createdAt || ''
+        });
+      }
       var bucket = expenseBucket(expense.category);
       var allocs = expenseAllocations(expense);
       allocs.forEach(function (a) {
@@ -409,7 +428,7 @@
 
     Object.keys(map).forEach(function (id) {
       var row = map[id];
-      row.settlementBalance = row.paidDeposit - row.actualBurden;
+      row.settlementBalance = row.paidDeposit + row.advancePaid - row.actualBurden;
       if (row.settlementBalance > 0) {
         row.refundAmount = row.settlementBalance;
         row.additionalAmount = 0;
@@ -440,12 +459,18 @@
       if (row.paidDeposit > 0) paidCount++;
     });
 
+    var walletExpenseTotal = paidWalletExpenses(budget).reduce(function (s, e) {
+      return s + e.amount;
+    }, 0);
+    var personalAdvanceTotal = personalAdvanceExpenses(budget).reduce(function (s, e) {
+      return s + e.amount;
+    }, 0);
     var expenseTotal = paidExpenses(budget).reduce(function (s, e) {
       return s + e.amount;
     }, 0);
 
     var unpaidTotal = EXPECTED_TOTAL_DEPOSIT - paidDepositTotal;
-    var cashBalance = paidDepositTotal - expenseTotal;
+    var cashBalance = paidDepositTotal - walletExpenseTotal;
     var settlementDifference = cashBalance + additionalCollectionTotal - refundTotal;
 
     return {
@@ -455,6 +480,8 @@
       paidCount: paidCount,
       totalParticipants: TOTAL_PARTICIPANTS,
       expenseTotal: expenseTotal,
+      walletExpenseTotal: walletExpenseTotal,
+      personalAdvanceTotal: personalAdvanceTotal,
       cashBalance: cashBalance,
       refundTotal: refundTotal,
       additionalCollectionTotal: additionalCollectionTotal,
@@ -548,12 +575,24 @@
     });
     var sumWithAdvance = computeWalletSummary(budget);
     ok('expense includes personal advance', sumWithAdvance.expenseTotal === 117157, sumWithAdvance.expenseTotal);
+    ok('wallet expense excludes personal advance', sumWithAdvance.walletExpenseTotal === 116060, sumWithAdvance.walletExpenseTotal);
+    ok('personal advance total', sumWithAdvance.personalAdvanceTotal === 1097, sumWithAdvance.personalAdvanceTotal);
+    ok('mama advance paid', sumWithAdvance.people['nagomi-mama'].advancePaid === 1097, sumWithAdvance.people['nagomi-mama'].advancePaid);
+    ok(
+      'mama balance includes advance',
+      sumWithAdvance.people['nagomi-mama'].settlementBalance ===
+        sumWithAdvance.people['nagomi-mama'].paidDeposit +
+        sumWithAdvance.people['nagomi-mama'].advancePaid -
+        sumWithAdvance.people['nagomi-mama'].actualBurden,
+      sumWithAdvance.people['nagomi-mama'].settlementBalance
+    );
     ok(
       'breakdown keeps expense title',
       sumWithAdvance.people['nagomi-mama'].breakdown.some(function (x) {
         return x.title === 'ジャパン（炭）' && !x.isInitialExpense && x.personalAmount > 0;
       })
     );
+    ok('advance settlementDiff=0', sumWithAdvance.settlementDifference === 0, String(sumWithAdvance.settlementDifference));
 
     var kimny = sum.people.kimny;
     ok('kimny has pet', kimny.buckets.cottage >= 1980);

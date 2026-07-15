@@ -502,7 +502,7 @@
     );
   }
 
-  function additionalCostLinesHTML(row) {
+  function burdenDetailLinesHTML(row) {
     var list = (row.breakdown || []).filter(function (item) {
       return !item.isInitialExpense && item.personalAmount > 0;
     });
@@ -518,6 +518,31 @@
           );
         }).join('') +
       '</ul>'
+    );
+  }
+
+  function advanceLinesHTML(row) {
+    var list = (row.advances || []).filter(function (item) {
+      return item.amount > 0;
+    });
+    return (
+      '<div class="nagomi-advance-box">' +
+        '<p class="nagomi-card-section-title">立替</p>' +
+        (list.length
+          ? (
+            '<ul class="nagomi-advance-lines">' +
+              list.map(function (item) {
+                return (
+                  '<li>' +
+                    '<span>' + escapeHTML(item.title || '（無題）') + '</span>' +
+                    '<em>' + B.formatYen(item.amount) + '</em>' +
+                  '</li>'
+                );
+              }).join('') +
+            '</ul>'
+          )
+          : '<p class="nagomi-advance-empty">なし</p>') +
+      '</div>'
     );
   }
 
@@ -541,8 +566,8 @@
     var cash = sum.cashBalance;
     var cashClass = cash > 0 ? 'is-plus' : (cash < 0 ? 'is-minus' : 'is-zero');
     var cashLabel = cash > 0
-      ? '残金（余り）'
-      : (cash < 0 ? '残金（不足）' : '残金');
+      ? '入金分の残金（余り）'
+      : (cash < 0 ? '入金分の残金（不足）' : '入金分の残金');
 
     if (walletEl) {
       walletEl.className = 'nagomi-wallet-remain ' + cashClass;
@@ -550,7 +575,9 @@
         '<p class="nagomi-wallet-remain-label">' + cashLabel + '</p>' +
         '<p class="nagomi-wallet-remain-value">' + B.formatYen(cash) + '</p>' +
         '<p class="nagomi-wallet-remain-sub">入金合計 ' + B.formatYen(sum.paidDepositTotal) +
-          ' − 支出合計 ' + B.formatYen(sum.expenseTotal) + '</p>';
+          ' − 入金分支出 ' + B.formatYen(sum.walletExpenseTotal) +
+          ' ／ 個人立替 ' + B.formatYen(sum.personalAdvanceTotal) +
+          ' ／ 総費用 ' + B.formatYen(sum.expenseTotal) + '</p>';
     }
 
     if (hint) {
@@ -576,7 +603,7 @@
           var purchaser = ex.purchaserId && B.ID_TO_PARTICIPANT[ex.purchaserId]
             ? B.ID_TO_PARTICIPANT[ex.purchaserId].name
             : '';
-          var source = ex.paymentSource === 'personal-advance' ? '個人立替' : '共同財布';
+          var source = ex.paymentSource === 'personal-advance' ? '個人立替' : '入金分';
           var actions = admin
             ? (
               '<div class="nagomi-card-actions">' +
@@ -595,7 +622,7 @@
                 '<li>費目：' + escapeHTML(cat) + '</li>' +
                 '<li>わりかん：' + escapeHTML(alloc) + '</li>' +
                 '<li>支払い：' + escapeHTML(source) +
-                  (purchaser ? ' ／ 購入者 ' + escapeHTML(purchaser) : '') + '</li>' +
+                  (purchaser ? ' ／ 買った人 ' + escapeHTML(purchaser) : '') + '</li>' +
               '</ul>' +
               actions +
             '</article>'
@@ -630,20 +657,23 @@
         : (
           '<p class="nagomi-deposit-line"><span>入金</span><strong>' + B.formatYen(paid) + '</strong></p>'
         );
-      var additionalLines = additionalCostLinesHTML(row);
+      var burdenDetails = burdenDetailLinesHTML(row);
+      var advanceLines = advanceLinesHTML(row);
 
       return (
         '<article class="nagomi-simple-card" data-id="' + p.id + '">' +
           '<header>' + avatarHTML(p.name) + '<h3>' + escapeHTML(p.name) + '</h3></header>' +
           depositLine +
+          '<p class="nagomi-card-section-title">負担</p>' +
           '<ul class="nagomi-cost-lines">' +
             '<li><span>コテージ費</span><em>' + B.formatYen(b.cottage) + '</em></li>' +
             '<li><span>食材費</span><em>' + B.formatYen(b.food) + '</em></li>' +
             '<li><span>レンタル費</span><em>' + B.formatYen(b.rental) + '</em></li>' +
             '<li><span>車代</span><em>' + B.formatYen(b.car) + '</em></li>' +
-            (b.other && !additionalLines ? '<li><span>その他</span><em>' + B.formatYen(b.other) + '</em></li>' : '') +
+            (b.other && !burdenDetails ? '<li><span>その他</span><em>' + B.formatYen(b.other) + '</em></li>' : '') +
           '</ul>' +
-          additionalLines +
+          burdenDetails +
+          advanceLines +
           '<p class="nagomi-remain ' + remainClass + '">' + remainLabel + '</p>' +
         '</article>'
       );
@@ -682,7 +712,7 @@
   }
 
   function paymentSourceLabel(src) {
-    return src === 'personal-advance' ? '個人立替' : '共同財布から支払い';
+    return src === 'personal-advance' ? '個人立替' : '入金分から支払い';
   }
 
   /* ---------- Expense modal ---------- */
@@ -923,6 +953,8 @@
             if (it.id === shopExpenseLink.itemId) {
               it.expenseId = newId;
               it.actualAmount = amount;
+            it.purchaserId = purchaserId;
+            it.paymentSource = paymentSource;
               it.done = true;
             }
           });
@@ -977,7 +1009,7 @@
       var item = list.find(function (it) { return it.id === itemId; });
       if (!item) return;
       if (item.expenseId) {
-        alert('この商品はすでに共同財布へ支出登録済みです。');
+        alert('この商品はすでに支出へ反映済みです。');
         return;
       }
       var amount = Math.floor(Number(item.actualAmount) || 0);
@@ -985,12 +1017,20 @@
         alert('先に実際の購入金額を入力してください。');
         return;
       }
+      if (!item.purchaserId) {
+        alert('先に「買った人」を選んでください。');
+        return;
+      }
+      if (!item.paymentSource) {
+        alert('先に「支払い元」を選んでください。');
+        return;
+      }
       openExpenseModal({
         title: (storeKey === 'konan' ? 'コーナン ' : storeKey === 'ropia' ? 'ロピア ' : '') + item.text,
         amount: amount,
         category: storeKey === 'ropia' ? 'food' : 'supplies',
-        purchaserId: B.NAME_TO_ID[getMe()] || '',
-        paymentSource: 'common-wallet',
+        purchaserId: item.purchaserId,
+        paymentSource: item.paymentSource,
         allocationType: 'all9',
         receiptUrl: '',
         memo: item.memo || ''
@@ -1008,6 +1048,8 @@
       store: item.store || storeName,
       qty: item.qty != null ? item.qty : 1,
       assignee: item.assignee || '',
+      purchaserId: item.purchaserId || (item.assignee && B.NAME_TO_ID[item.assignee]) || '',
+      paymentSource: item.paymentSource || '',
       actualAmount: item.actualAmount != null && item.actualAmount !== ''
         ? Math.floor(Number(item.actualAmount))
         : null,
@@ -1020,6 +1062,21 @@
     return (list || []).map(function (it) { return normalizeShopItem(it, storeName); });
   }
 
+  function participantSelectOptions(selectedId) {
+    return '<option value="">（未指定）</option>' + B.PARTICIPANTS.map(function (p) {
+      return '<option value="' + p.id + '"' + (selectedId === p.id ? ' selected' : '') + '>' +
+        escapeHTML(p.name) + '</option>';
+    }).join('');
+  }
+
+  function paymentSourceSelectOptions(selected) {
+    return [
+      '<option value=""' + (!selected ? ' selected' : '') + '>未定</option>',
+      '<option value="common-wallet"' + (selected === 'common-wallet' ? ' selected' : '') + '>入金分</option>',
+      '<option value="personal-advance"' + (selected === 'personal-advance' ? ' selected' : '') + '>個人立替</option>'
+    ].join('');
+  }
+
   function listRowHTML(item, storeKey) {
     var by = item.by ? '<em class="by">' + escapeHTML(item.by) + '</em>' : '';
     var isShop = storeKey === 'konan' || storeKey === 'ropia';
@@ -1027,17 +1084,30 @@
 
     if (isShop) {
       var amtVal = item.actualAmount != null ? item.actualAmount : '';
+      var disabled = item.expenseId ? ' disabled' : '';
       extra +=
+        '<div class="nagomi-shop-controls">' +
+          '<label class="nagomi-shop-field">買った人' +
+            '<select class="js_shop_purchaser" data-store="' + storeKey + '" data-id="' + item.id + '"' + disabled + '>' +
+              participantSelectOptions(item.purchaserId || '') +
+            '</select>' +
+          '</label>' +
+          '<label class="nagomi-shop-field">支払い元' +
+            '<select class="js_shop_payment" data-store="' + storeKey + '" data-id="' + item.id + '"' + disabled + '>' +
+              paymentSourceSelectOptions(item.paymentSource || '') +
+            '</select>' +
+          '</label>' +
+        '</div>' +
         '<label class="nagomi-shop-amt">金額' +
           '<input type="number" class="js_shop_amount" data-store="' + storeKey + '" data-id="' + item.id +
-            '" min="0" step="1" inputmode="numeric" value="' + amtVal + '" placeholder="円">' +
+            '" min="0" step="1" inputmode="numeric" value="' + amtVal + '" placeholder="円"' + disabled + '>' +
         '</label>';
       if (item.expenseId) {
-        extra += '<span class="nagomi-shop-linked">共同財布登録済</span>';
+        extra += '<span class="nagomi-shop-linked">支出反映済</span>';
       } else if (item.actualAmount != null && item.actualAmount > 0) {
         extra +=
           '<button type="button" class="nagomi-btn-primary js_shop_expense" data-store="' +
-            storeKey + '" data-id="' + item.id + '">共同財布へ支出登録</button>';
+            storeKey + '" data-id="' + item.id + '">支出へ反映</button>';
       }
     }
 
@@ -1182,6 +1252,20 @@
         if (it.id === id) {
           if (value === '' || value == null) it.actualAmount = null;
           else it.actualAmount = Math.max(0, Math.floor(Number(value) || 0));
+        }
+      });
+      await store.set(storeKey, list);
+      renderList(storeKey);
+    });
+  }
+
+  async function updateShopMeta(storeKey, id, field, value) {
+    requireWrite(async function () {
+      var list = state[storeKey] || [];
+      list.forEach(function (it) {
+        if (it.id === id && !it.expenseId) {
+          if (field === 'purchaserId') it.purchaserId = value || '';
+          if (field === 'paymentSource') it.paymentSource = value || '';
         }
       });
       await store.set(storeKey, list);
@@ -1425,6 +1509,24 @@
         updateShopAmount(
           e.target.getAttribute('data-store'),
           e.target.getAttribute('data-id'),
+          e.target.value
+        );
+        return;
+      }
+      if (e.target.classList.contains('js_shop_purchaser')) {
+        updateShopMeta(
+          e.target.getAttribute('data-store'),
+          e.target.getAttribute('data-id'),
+          'purchaserId',
+          e.target.value
+        );
+        return;
+      }
+      if (e.target.classList.contains('js_shop_payment')) {
+        updateShopMeta(
+          e.target.getAttribute('data-store'),
+          e.target.getAttribute('data-id'),
+          'paymentSource',
           e.target.value
         );
       }
